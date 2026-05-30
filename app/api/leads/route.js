@@ -1,22 +1,86 @@
+import { forwardToBackend, insertSupabase, sendHighLevel } from "../serverHelpers";
+
 export async function POST(request) {
   const lead = await request.json();
-  const backendUrl = process.env.FASTAPI_BACKEND_URL || "http://127.0.0.1:8000";
+  const backendResult = await forwardToBackend("/leads", lead);
+
+  if (backendResult) {
+    return Response.json(backendResult.data, { status: backendResult.status });
+  }
+
+  if (!lead.consentAccepted) {
+    return Response.json({ ok: false, message: "Consent is required before submitting this form." }, { status: 400 });
+  }
+
+  const leadId = crypto.randomUUID();
+  const now = new Date().toISOString();
+  const row = {
+    id: leadId,
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    state: lead.state,
+    date_of_birth: lead.dob,
+    beneficiary: lead.beneficiary,
+    hobbies: lead.hobbies || "",
+    coverage: lead.coverage,
+    contact_preference: lead.contactPreference || "Text me",
+    consent_accepted: Boolean(lead.consentAccepted),
+    consent_language: lead.consentLanguage || "",
+    consent_timestamp: lead.consentTimestamp || now,
+    source_url: lead.sourceUrl || "",
+    raw_payload: {
+      source: "website_lead_form",
+      contact_preference: lead.contactPreference || "Text me",
+      consent_timestamp: lead.consentTimestamp || now,
+      source_url: lead.sourceUrl || "",
+    },
+    created_at: now,
+  };
+
+  const highLevelPayload = {
+    event: "lead_submitted",
+    lead_id: leadId,
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    state: lead.state,
+    date_of_birth: lead.dob,
+    beneficiary: lead.beneficiary,
+    hobbies: lead.hobbies || "",
+    coverage: lead.coverage,
+    contact_preference: lead.contactPreference || "Text me",
+    consent_accepted: Boolean(lead.consentAccepted),
+    consent_language: lead.consentLanguage || "",
+    consent_timestamp: lead.consentTimestamp || now,
+    source_url: lead.sourceUrl || "",
+    source: "senior_needs_marketing_website",
+  };
 
   try {
-    const response = await fetch(`${backendUrl}/leads`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(lead),
-    });
+    const supabaseStatus = await insertSupabase("leads", row);
+    const highlevel_status = await sendHighLevel(process.env.HIGHLEVEL_LEAD_WEBHOOK_URL, highLevelPayload);
 
-    const data = await response.json();
-    return Response.json(data, { status: response.status });
+    if (supabaseStatus === "not_configured" && highlevel_status === "not_configured") {
+      return Response.json(
+        { ok: false, message: "Lead storage is not configured for this deployment." },
+        { status: 503 },
+      );
+    }
+
+    return Response.json({
+      ok: true,
+      lead_id: leadId,
+      outreachStatus: "queued",
+      highlevel_status,
+      message: "Lead received. A licensed agent can follow up by the preferred contact method.",
+    });
   } catch (error) {
-    console.error("Could not reach FastAPI lead backend", error);
+    console.error("Could not save lead", error);
     return Response.json(
       {
         ok: false,
-        message: "Lead could not be saved because the backend is unavailable.",
+        message: "Lead could not be saved right now.",
       },
       { status: 503 },
     );

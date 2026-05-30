@@ -1,4 +1,5 @@
 .next/
+.vercel/
 node_modules/
 backend/.venv/
 __pycache__/
@@ -11,3 +12,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+.vercel
