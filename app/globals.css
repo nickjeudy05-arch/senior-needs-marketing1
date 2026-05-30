@@ -2362,7 +2362,7 @@ footer p {
     place-items: center;
   }
 
-  .mobile-dropdown {
+  .topbar .mobile-dropdown {
     position: absolute;
     top: calc(100% + 10px);
     right: clamp(14px, 4vw, 34px);
@@ -2378,7 +2378,7 @@ footer p {
     backdrop-filter: blur(18px);
   }
 
-  .mobile-dropdown a {
+  .topbar .mobile-dropdown a {
     min-height: 48px;
     display: flex;
     align-items: center;
@@ -2393,7 +2393,7 @@ footer p {
     font-weight: 900;
   }
 
-  .mobile-dropdown a:last-child {
+  .topbar .mobile-dropdown a:last-child {
     color: var(--white);
     background: #0b0d10;
   }

@@ -55,6 +55,10 @@ const services = [
   },
 ];
 
+const productNavLinks = navLinks.filter((link) =>
+  ["/life-insurance", "/mortgage-protection", "/final-expense", "/medicare"].includes(link.href),
+);
+
 const faqs = {
   medicare:
     "Medicare options can include Medicare Advantage, Medicare Supplement, and Part D prescription plans. A licensed agent can help compare benefits, doctors, prescriptions, and total yearly cost based on your state.",
@@ -876,7 +880,7 @@ export default function HomePage() {
         </button>
         {menuOpen && (
           <nav className="mobile-dropdown" aria-label="Mobile navigation">
-            {navLinks.map((link) => (
+            {productNavLinks.map((link) => (
               <Link href={link.href} key={link.href} onClick={() => setMenuOpen(false)}>
                 {link.label}
                 <ChevronRight size={15} aria-hidden="true" />

@@ -5,6 +5,10 @@ import { useState } from "react";
 import { ChevronRight, Menu, UserRoundCheck, X } from "lucide-react";
 import { navLinks } from "../coverageData";
 
+const productNavLinks = navLinks.filter((link) =>
+  ["/life-insurance", "/mortgage-protection", "/final-expense", "/medicare"].includes(link.href),
+);
+
 export default function SimpleHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -35,7 +39,7 @@ export default function SimpleHeader() {
       </button>
       {menuOpen && (
         <nav className="mobile-dropdown" aria-label="Mobile navigation">
-          {navLinks.map((link) => (
+          {productNavLinks.map((link) => (
             <Link href={link.href} key={link.href} onClick={() => setMenuOpen(false)}>
               {link.label}
               <ChevronRight size={15} aria-hidden="true" />
