@@ -38,8 +38,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Twilio-Signature"],
 )
 
 
@@ -197,30 +197,34 @@ def build_assistant_prompt(context: dict[str, Any]) -> str:
 
 
 class LeadCreate(BaseModel):
-    name: str = Field(min_length=1)
+    name: str = Field(min_length=1, max_length=120)
     email: EmailStr
-    phone: str = Field(min_length=7)
-    state: str = Field(min_length=2)
-    dob: str = Field(min_length=1)
-    beneficiary: str = Field(min_length=1)
-    hobbies: str | None = ""
-    coverage: str = Field(min_length=1)
-    contactPreference: str = Field(default="Text me")
+    phone: str = Field(min_length=7, max_length=30)
+    state: str = Field(min_length=2, max_length=80)
+    dob: str = Field(min_length=1, max_length=30)
+    beneficiary: str = Field(min_length=1, max_length=120)
+    hobbies: str | None = Field(default="", max_length=500)
+    coverage: str = Field(min_length=1, max_length=80)
+    contactPreference: str = Field(default="Text me", max_length=40)
+    consentAccepted: bool = False
+    consentLanguage: str = Field(default="", max_length=1000)
+    consentTimestamp: str | None = Field(default=None, max_length=80)
+    sourceUrl: str | None = Field(default=None, max_length=500)
 
 
 class MeetingCreate(BaseModel):
     lead_id: str | None = None
-    name: str | None = ""
+    name: str | None = Field(default="", max_length=120)
     email: EmailStr | None = None
-    phone: str | None = ""
-    coverage: str | None = ""
-    state: str | None = ""
-    appointment_date: str = Field(min_length=1)
-    appointment_time: str = Field(min_length=1)
-    appointment_label: str = Field(min_length=1)
-    meeting_type: str = Field(default="Phone review")
-    duration: str = Field(default="30 minutes")
-    timezone: str = Field(default="Local time")
+    phone: str | None = Field(default="", max_length=30)
+    coverage: str | None = Field(default="", max_length=80)
+    state: str | None = Field(default="", max_length=80)
+    appointment_date: str = Field(min_length=1, max_length=20)
+    appointment_time: str = Field(min_length=1, max_length=20)
+    appointment_label: str = Field(min_length=1, max_length=160)
+    meeting_type: str = Field(default="Phone review", max_length=80)
+    duration: str = Field(default="30 minutes", max_length=40)
+    timezone: str = Field(default="Local time", max_length=80)
 
 
 class ChatMessage(BaseModel):
@@ -229,7 +233,7 @@ class ChatMessage(BaseModel):
 
 
 class AssistantRequest(BaseModel):
-    message: str = Field(min_length=1)
+    message: str = Field(min_length=1, max_length=2000)
     messages: list[ChatMessage] = Field(default_factory=list)
     lead: dict[str, Any] | None = None
     bookedTime: str | None = ""
@@ -242,9 +246,11 @@ def health() -> dict[str, str]:
 
 @app.post("/leads")
 def create_lead(lead: LeadCreate) -> dict[str, Any]:
+    if not lead.consentAccepted:
+        raise HTTPException(status_code=400, detail="Consent is required before submitting this form.")
+
     lead_id = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
-    payload = lead.model_dump()
 
     row = {
         "id": lead_id,
@@ -257,7 +263,16 @@ def create_lead(lead: LeadCreate) -> dict[str, Any]:
         "hobbies": lead.hobbies or "",
         "coverage": lead.coverage,
         "contact_preference": lead.contactPreference,
-        "raw_payload": payload,
+        "consent_accepted": lead.consentAccepted,
+        "consent_language": lead.consentLanguage,
+        "consent_timestamp": lead.consentTimestamp or now,
+        "source_url": lead.sourceUrl or "",
+        "raw_payload": {
+            "source": "website_lead_form",
+            "contact_preference": lead.contactPreference,
+            "consent_timestamp": lead.consentTimestamp or now,
+            "source_url": lead.sourceUrl or "",
+        },
         "created_at": now,
     }
 
@@ -278,7 +293,6 @@ def create_lead(lead: LeadCreate) -> dict[str, Any]:
 def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
     meeting_id = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
-    payload = meeting.model_dump()
 
     row = {
         "id": meeting_id,
@@ -295,7 +309,12 @@ def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
         "duration": meeting.duration,
         "timezone": meeting.timezone,
         "status": "requested",
-        "raw_payload": payload,
+        "raw_payload": {
+            "source": "website_scheduler",
+            "meeting_type": meeting.meeting_type,
+            "duration": meeting.duration,
+            "timezone": meeting.timezone,
+        },
         "created_at": now,
     }
 

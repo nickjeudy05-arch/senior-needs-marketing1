@@ -9,6 +9,10 @@ create table if not exists public.leads (
   hobbies text,
   coverage text not null,
   contact_preference text not null,
+  consent_accepted boolean not null default false,
+  consent_language text,
+  consent_timestamp timestamptz,
+  source_url text,
   raw_payload jsonb,
   created_at timestamptz not null default now()
 );
@@ -34,6 +38,7 @@ create table if not exists public.meetings (
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_phone_idx on public.leads (phone);
+create index if not exists leads_consent_timestamp_idx on public.leads (consent_timestamp desc);
 create index if not exists meetings_lead_id_idx on public.meetings (lead_id);
 create index if not exists meetings_created_at_idx on public.meetings (created_at desc);
 

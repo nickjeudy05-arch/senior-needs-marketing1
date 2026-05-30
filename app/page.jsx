@@ -204,6 +204,9 @@ const initialLead = {
   contactPreference: "Text me",
 };
 
+const consentLanguage =
+  "By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my insurance request. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and HELP for help. Consent is not required to buy.";
+
 function Field({ label, name, type = "text", value, onChange, placeholder, required = true }) {
   return (
     <label className="field">
@@ -239,7 +242,13 @@ function LeadForm({ onSubmitted }) {
     const response = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(lead),
+      body: JSON.stringify({
+        ...lead,
+        consentAccepted: true,
+        consentLanguage,
+        consentTimestamp: new Date().toISOString(),
+        sourceUrl: window.location.href,
+      }),
     });
     const outreach = await response.json();
     if (!response.ok) {
@@ -311,9 +320,7 @@ function LeadForm({ onSubmitted }) {
       <label className="consent">
         <input required type="checkbox" />
         <span>
-          By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my
-          insurance request. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and
-          HELP for help. Consent is not required to buy. View our <Link href="/privacy">Privacy Policy</Link> and{" "}
+          {consentLanguage} View our <Link href="/privacy">Privacy Policy</Link> and{" "}
           <Link href="/sms-terms">SMS Terms</Link>.
         </span>
       </label>

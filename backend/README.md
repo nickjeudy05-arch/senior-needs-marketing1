@@ -92,5 +92,6 @@ validates Twilio's `X-Twilio-Signature` header so random internet traffic cannot
 - Store `SUPABASE_SERVICE_ROLE_KEY`, `TWILIO_AUTH_TOKEN`, and `OPENROUTER_API_KEY` only in backend/server environment variables.
 - Use HTTPS for the public website and public backend.
 - Keep Privacy Policy, Terms, and SMS Terms visible in the website footer.
+- Keep lead consent fields active. Lead submissions store consent accepted, consent language, timestamp, and source URL.
 - Do not collect Social Security numbers, bank account details, Medicare ID numbers, or full medical records in forms, chat, or SMS.
 - Keep Twilio opt-out language active: STOP, HELP, and START.
