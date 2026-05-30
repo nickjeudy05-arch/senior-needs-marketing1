@@ -852,7 +852,7 @@ export default function HomePage() {
 
   return (
     <main>
-      <header className="topbar">
+  <header className="topbar">
         <Link href="/" className="wordmark logo-wordmark" aria-label="Senior Needs Marketing home">
           <img src="/snm-logo.svg" alt="Senior Needs Marketing" />
         </Link>
@@ -868,6 +868,24 @@ export default function HomePage() {
           <Menu size={22} />
         </button>
       </header>
+      <nav className="mobile-tabs" aria-label="Mobile quick navigation">
+        <a href="#start">
+          <UserRoundCheck size={16} aria-hidden="true" />
+          Start
+        </a>
+        <a href="#coverage">
+          <ShieldCheck size={16} aria-hidden="true" />
+          Coverage
+        </a>
+        <a href="#learn">
+          <ClipboardCheck size={16} aria-hidden="true" />
+          Learn
+        </a>
+        <a href="#process">
+          <CalendarClock size={16} aria-hidden="true" />
+          Process
+        </a>
+      </nav>
 
       <section className="hero-new" id="start">
         <div className="hero-art">
@@ -969,7 +987,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="education-library">
+      <section className="education-library" id="learn">
         <div className="section-heading">
           <p className="eyebrow">Insurance Learning Center</p>
           <h2>Clear educational slides for every major coverage path.</h2>

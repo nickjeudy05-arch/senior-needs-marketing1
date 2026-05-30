@@ -116,6 +116,10 @@ button {
   background: var(--white);
 }
 
+.mobile-tabs {
+  display: none;
+}
+
 .hero-new {
   min-height: calc(100vh - 85px);
   display: grid;
@@ -2410,6 +2414,7 @@ footer p {
 @media (max-width: 640px) {
   body {
     background: linear-gradient(180deg, #ffffff 0%, #f7f7f5 100%);
+    padding-bottom: 70px;
   }
 
   .topbar {
@@ -2430,6 +2435,38 @@ footer p {
 
   .menu-button {
     display: none;
+  }
+
+  .mobile-tabs {
+    position: sticky;
+    top: 68px;
+    z-index: 19;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid rgba(11, 13, 16, 0.08);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-tabs a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #233044;
+    background: #f7f7f5;
+    border: 1px solid rgba(11, 13, 16, 0.08);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .mobile-tabs svg {
+    color: #12805f;
+    flex: 0 0 auto;
   }
 
   .hero-new {
@@ -2827,18 +2864,18 @@ footer p {
   .chat {
     left: 10px;
     right: 10px;
-    bottom: 10px;
+    bottom: 78px;
     width: auto;
   }
 
   .chat.open {
-    top: 72px;
+    top: 122px;
   }
 
   .chat.open .chat-window {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto auto;
-    max-height: calc(100vh - 94px);
+    max-height: calc(100vh - 202px);
   }
 
   .messages {
