@@ -1,0 +1,16 @@
+<svg width="360" height="104" viewBox="0 0 360 104" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Senior Needs Marketing</title>
+  <desc id="desc">Sleek black and white Senior Needs Marketing logo with a small emerald accent.</desc>
+  <rect width="360" height="104" rx="20" fill="white"/>
+  <rect x="16" y="16" width="72" height="72" rx="18" fill="#0B0D10"/>
+  <path d="M34 64.5C40.2 50.4 49.2 45.6 52 56.3C54.8 45.6 63.8 50.4 70 64.5C65.7 74 58.9 79.1 52 82C45.1 79.1 38.3 74 34 64.5Z" fill="white"/>
+  <path d="M31 34H73" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <path d="M52 24V44" stroke="#20C997" stroke-width="5" stroke-linecap="round"/>
+  <path d="M112 36C112 28.6 117.9 23.8 126.6 23.8C132.8 23.8 137.8 26.1 141 30.3L135.3 34.8C133.2 32 130.5 30.7 126.8 30.7C122.8 30.7 120.1 32.5 120.1 35.5C120.1 38.6 122.7 39.6 129.4 41.4C137.9 43.7 142.4 47.2 142.4 54.4C142.4 62 136.2 67.6 126.8 67.6C119.5 67.6 113.7 64.8 110.2 59.7L116.1 55.4C118.5 59 121.9 60.8 126.7 60.8C131.4 60.8 134.2 58.8 134.2 55.2C134.2 52.3 131.9 51.1 125.4 49.3C116.6 46.9 112 43.2 112 36Z" fill="#0B0D10"/>
+  <path d="M153 24.5H161.4L184.2 53.1V24.5H192.2V67H184.3L161 37.6V67H153V24.5Z" fill="#0B0D10"/>
+  <path d="M204 24.5H214.2L228.1 55.4L242 24.5H252V67H244.2V39.4L231.4 67H224.6L211.8 39.4V67H204V24.5Z" fill="#0B0D10"/>
+  <path d="M111 82H255" stroke="#20C997" stroke-width="4" stroke-linecap="round"/>
+  <path d="M273 34H326" stroke="#0B0D10" stroke-width="3" stroke-linecap="round"/>
+  <path d="M273 52H334" stroke="#0B0D10" stroke-width="3" stroke-linecap="round"/>
+  <path d="M273 70H317" stroke="#0B0D10" stroke-width="3" stroke-linecap="round"/>
+</svg>
