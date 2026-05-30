@@ -167,14 +167,14 @@ const professionalFaqs = [
 ];
 
 const assistantExamples = [
-  "I'm 38, married, two kids, and owe $310k on my house. What should I look at?",
-  "I'm self-employed and want affordable coverage if something happens to me.",
-  "My parent needs help with final expenses but has diabetes. What options might exist?",
-  "I'm turning 65 soon. What Medicare questions should I be ready to answer?",
-  "Should I choose term or whole life if I only have $75/month?",
-  "I already have life insurance through work. Is that enough?",
-  "What information does an agent need before giving me a quote?",
-  "Can you help me prepare for a call with an agent?",
+  "I'm 42, married, two kids, $310k mortgage, and $90/month budget. What should I review?",
+  "Explain term vs whole life and when each one makes sense.",
+  "My parent is 67 and wants burial or cremation coverage. What details matter?",
+  "I'm turning 65 soon. How do Medicare Advantage, Supplement, and Part D compare?",
+  "I have diabetes and high blood pressure. Can I still get life insurance?",
+  "How much life insurance should I think about if my spouse depends on my income?",
+  "I already have life insurance through work. What gaps should I check?",
+  "What information does an agent need before giving me a real quote?",
 ];
 
 const siteImages = {
@@ -242,8 +242,13 @@ function LeadForm({ onSubmitted }) {
       body: JSON.stringify(lead),
     });
     const outreach = await response.json();
+    if (!response.ok) {
+      setStatus("failed");
+      return;
+    }
+    const submittedLead = { ...lead, id: outreach.lead_id };
     setStatus("sent");
-    onSubmitted(lead, outreach);
+    onSubmitted(submittedLead, outreach);
   }
 
   return (
@@ -306,13 +311,18 @@ function LeadForm({ onSubmitted }) {
       <label className="consent">
         <input required type="checkbox" />
         <span>
-          I agree Senior Needs Marketing may contact me by phone, text, or email.
-          Message and data rates may apply. Consent is not required to buy.
+          By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my
+          insurance request. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and
+          HELP for help. Consent is not required to buy. View our <Link href="/privacy">Privacy Policy</Link> and{" "}
+          <Link href="/sms-terms">SMS Terms</Link>.
         </span>
       </label>
 
       {status === "missing" && (
         <p className="form-alert">Please complete name, email, phone, state, date of birth, and beneficiary.</p>
+      )}
+      {status === "failed" && (
+        <p className="form-alert">We could not save your request yet. Please try again in a moment.</p>
       )}
 
       <button className="primary-submit" disabled={status === "sending"} type="button" onClick={submitLead}>
@@ -328,6 +338,7 @@ function BookingPanel({ lead, onBooked }) {
   const [time, setTime] = useState("09:00");
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState("");
+  const [bookingStatus, setBookingStatus] = useState("idle");
 
   const timeSlots = useMemo(() => {
     const slots = [];
@@ -396,7 +407,7 @@ function BookingPanel({ lead, onBooked }) {
   const [duration, setDuration] = useState("30 minutes");
   const [timezone, setTimezone] = useState("Local time");
 
-  function confirmAppointment() {
+  async function confirmAppointment() {
     if (!date || !time) {
       setError("Choose a date and time first.");
       return;
@@ -412,6 +423,34 @@ function BookingPanel({ lead, onBooked }) {
 
     const appointment = `${formatDate(date)} at ${formatTime(time)}`;
     setError("");
+    setBookingStatus("saving");
+
+    const response = await fetch("/api/meetings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        lead_id: lead.id,
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone,
+        coverage: lead.coverage,
+        state: lead.state,
+        appointment_date: date,
+        appointment_time: time,
+        appointment_label: appointment,
+        meeting_type: meetingType,
+        duration,
+        timezone,
+      }),
+    });
+
+    if (!response.ok) {
+      setBookingStatus("idle");
+      setError("We could not save that appointment yet. Please try again.");
+      return;
+    }
+
+    setBookingStatus("saved");
     setConfirmed(appointment);
     onBooked(appointment);
     setTimeout(() => {
@@ -543,9 +582,9 @@ function BookingPanel({ lead, onBooked }) {
             </div>
           </div>
         )}
-        <button type="button" className="confirm" onClick={confirmAppointment}>
+        <button type="button" className="confirm" onClick={confirmAppointment} disabled={bookingStatus === "saving"}>
           {confirmed ? <Check size={18} aria-hidden="true" /> : <CalendarClock size={18} aria-hidden="true" />}
-          {confirmed ? "Appointment Booked" : "Confirm Appointment"}
+          {bookingStatus === "saving" ? "Saving Appointment..." : confirmed ? "Appointment Booked" : "Confirm Appointment"}
         </button>
       </div>
     </section>
@@ -561,6 +600,8 @@ function ChatBot({ lead, bookedTime }) {
     },
   ]);
   const [draft, setDraft] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
+  const hasUserMessage = messages.some((message) => message.from === "user");
 
   const suggestions = useMemo(() => assistantExamples, []);
 
@@ -700,17 +741,43 @@ function ChatBot({ lead, bookedTime }) {
     return "I can help with most insurance planning questions at a high level. Try asking something like: 'I'm 42, married, two kids, $250k mortgage, $80/month budget. What should I review?' The more context you give me, the more useful I can be.";
   }
 
-  function sendMessage(text = draft) {
+  async function sendMessage(text = draft) {
     if (!text.trim()) return;
-    const reply = bookedTime
-      ? `You are set for ${bookedTime}. A licensed agent will follow up using the contact preference you selected.`
-      : answerQuestion(text);
-    setMessages((current) => [
-      ...current,
-      { from: "user", text },
-      { from: "bot", text: reply },
-    ]);
+    const userText = text.trim();
+    const nextMessages = [
+      ...messages,
+      { from: "user", text: userText },
+    ];
+
+    setMessages(nextMessages);
     setDraft("");
+    setIsThinking(true);
+
+    try {
+      const response = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          messages,
+          lead,
+          bookedTime,
+        }),
+      });
+      const data = await response.json();
+      const reply = data.reply || answerQuestion(userText);
+      setMessages((current) => [
+        ...current,
+        { from: "bot", text: reply },
+      ]);
+    } catch {
+      setMessages((current) => [
+        ...current,
+        { from: "bot", text: answerQuestion(userText) },
+      ]);
+    } finally {
+      setIsThinking(false);
+    }
   }
 
   return (
@@ -734,25 +801,28 @@ function ChatBot({ lead, bookedTime }) {
                 {message.text}
               </p>
             ))}
+            {isThinking && <p className="bot">Thinking through your situation...</p>}
           </div>
-          <div className="quick-actions">
-            {suggestions.map((item) => (
-              <button type="button" key={item} onClick={() => sendMessage(item)}>
-                {item}
-              </button>
-            ))}
-          </div>
+          {!hasUserMessage && (
+            <div className="quick-actions">
+              {suggestions.map((item) => (
+                <button type="button" key={item} onClick={() => sendMessage(item)}>
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="chat-input">
             <input
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               onKeyDown={(event) => {
-                if (event.key === "Enter") sendMessage();
+                if (event.key === "Enter" && !isThinking) sendMessage();
               }}
               placeholder="Ask a question..."
             />
-            <button type="button" onClick={() => sendMessage()}>
-              Send
+            <button type="button" disabled={isThinking} onClick={() => sendMessage()}>
+              {isThinking ? "..." : "Send"}
             </button>
           </div>
         </div>
@@ -1104,6 +1174,11 @@ export default function HomePage() {
         <div>
           <strong>Senior Needs Marketing</strong>
           <p>Life Insurance | Mortgage Protection | Final Expense | Medicare Health Insurance</p>
+          <div className="footer-links">
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/sms-terms">SMS Terms</Link>
+          </div>
         </div>
         <p>Serving clients nationwide | Licensed agent follow-up</p>
       </footer>
