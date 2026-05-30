@@ -2,6 +2,7 @@ import os
 from datetime import date, datetime, time, timezone
 from typing import Any
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import httpx
 from dotenv import load_dotenv
@@ -35,11 +36,11 @@ ALLOWED_ORIGINS = [
 ]
 
 TIMEZONE_OFFSETS = {
-    "Eastern": "-05:00",
-    "Central": "-06:00",
-    "Mountain": "-07:00",
-    "Pacific": "-08:00",
-    "Local time": "-05:00",
+    "Eastern": "America/New_York",
+    "Central": "America/Chicago",
+    "Mountain": "America/Denver",
+    "Pacific": "America/Los_Angeles",
+    "Local time": "America/New_York",
 }
 
 app = FastAPI(title="Senior Needs Marketing API", version="1.0.0")
@@ -93,8 +94,9 @@ def build_appointment_start_iso(appointment_date: str, appointment_time: str, ti
     except ValueError:
         return f"{appointment_date}T{appointment_time}"
 
-    offset = TIMEZONE_OFFSETS.get(timezone_label, TIMEZONE_OFFSETS["Local time"])
-    return f"{datetime.combine(parsed_date, parsed_time).isoformat()}{offset}"
+    zone_name = TIMEZONE_OFFSETS.get(timezone_label, TIMEZONE_OFFSETS["Local time"])
+    localized = datetime.combine(parsed_date, parsed_time).replace(tzinfo=ZoneInfo(zone_name))
+    return localized.isoformat()
 
 
 def log_sms_message(

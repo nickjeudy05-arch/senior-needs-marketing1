@@ -63,13 +63,22 @@ export async function sendHighLevel(webhookUrl, payload) {
 }
 
 export function appointmentStartIso(appointmentDate, appointmentTime, timezone) {
-  const offsets = {
-    Eastern: "-05:00",
-    Central: "-06:00",
-    Mountain: "-07:00",
-    Pacific: "-08:00",
-    "Local time": "-05:00",
+  const timeZones = {
+    Eastern: "America/New_York",
+    Central: "America/Chicago",
+    Mountain: "America/Denver",
+    Pacific: "America/Los_Angeles",
+    "Local time": "America/New_York",
   };
-  const offset = offsets[timezone] || offsets["Local time"];
+  const timeZone = timeZones[timezone] || timeZones["Local time"];
+  const utcGuess = new Date(`${appointmentDate}T${appointmentTime}:00Z`);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "longOffset",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(utcGuess);
+  const offset = parts.find((part) => part.type === "timeZoneName")?.value.replace("GMT", "") || "-05:00";
   return `${appointmentDate}T${appointmentTime}:00${offset}`;
 }
