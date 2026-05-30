@@ -1,9 +1,13 @@
 export function getBackendUrl() {
-  const backendUrl = process.env.FASTAPI_BACKEND_URL || "";
+  const backendUrl = cleanEnv(process.env.FASTAPI_BACKEND_URL);
   if (!backendUrl || backendUrl.includes("127.0.0.1") || backendUrl.includes("localhost")) {
     return "";
   }
   return backendUrl.replace(/\/$/, "");
+}
+
+export function cleanEnv(value) {
+  return (value || "").replace(/^\uFEFF/, "").trim();
 }
 
 export async function forwardToBackend(path, payload) {
@@ -21,8 +25,8 @@ export async function forwardToBackend(path, payload) {
 }
 
 export async function insertSupabase(table, row) {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = cleanEnv(process.env.SUPABASE_URL);
+  const serviceKey = cleanEnv(process.env.SUPABASE_SERVICE_ROLE_KEY);
   if (!supabaseUrl || !serviceKey) return "not_configured";
 
   const response = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/${table}`, {
@@ -45,6 +49,7 @@ export async function insertSupabase(table, row) {
 }
 
 export async function sendHighLevel(webhookUrl, payload) {
+  webhookUrl = cleanEnv(webhookUrl);
   if (!webhookUrl) return "not_configured";
 
   const response = await fetch(webhookUrl, {
