@@ -32,6 +32,8 @@ TWILIO_AUTH_TOKEN=your-rotated-twilio-auth-token
 TWILIO_FROM_PHONE=+18446280764
 TWILIO_VALIDATE_WEBHOOKS=true
 PUBLIC_BACKEND_URL=https://your-deployed-fastapi-backend.com
+HIGHLEVEL_LEAD_WEBHOOK_URL=https://services.leadconnectorhq.com/hooks/...
+HIGHLEVEL_MEETING_WEBHOOK_URL=https://services.leadconnectorhq.com/hooks/...
 ALLOWED_ORIGINS=https://your-public-website-domain.com
 ```
 
@@ -44,6 +46,14 @@ https://your-deployed-fastapi-backend.com/twilio/inbound-sms
 ```
 
 Use `HTTP POST`.
+
+## GoHighLevel Webhooks
+
+Create an Inbound Webhook workflow in GoHighLevel for new website leads and paste its URL into `HIGHLEVEL_LEAD_WEBHOOK_URL`.
+
+Create a second Inbound Webhook workflow for appointment requests and paste its URL into `HIGHLEVEL_MEETING_WEBHOOK_URL`.
+
+If you only want one HighLevel workflow, set only `HIGHLEVEL_LEAD_WEBHOOK_URL`; appointment requests will use that same webhook.
 
 ## Data Handling
 

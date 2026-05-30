@@ -26,6 +26,8 @@ TWILIO_AUTH_TOKEN=...
 TWILIO_FROM_PHONE=+15551234567
 TWILIO_VALIDATE_WEBHOOKS=true
 PUBLIC_BACKEND_URL=https://your-public-backend-domain.com
+HIGHLEVEL_LEAD_WEBHOOK_URL=https://services.leadconnectorhq.com/hooks/...
+HIGHLEVEL_MEETING_WEBHOOK_URL=https://services.leadconnectorhq.com/hooks/...
 ```
 
 Use the Supabase service role key only on the backend. Do not expose it in frontend code.
@@ -63,6 +65,22 @@ FASTAPI_BACKEND_URL=http://127.0.0.1:8000
 - `POST /twilio/inbound-sms`
 
 The assistant endpoint uses OpenRouter's OpenAI-compatible chat completions API. Keep the OpenRouter API key in `backend/.env` only.
+
+## GoHighLevel Lead Automation
+
+Create an Inbound Webhook workflow in GoHighLevel and paste the generated webhook URL into `HIGHLEVEL_LEAD_WEBHOOK_URL`.
+When a visitor submits the website form, the backend saves the lead in Supabase and sends the lead payload to HighLevel.
+
+Create a second Inbound Webhook workflow for appointments and paste it into `HIGHLEVEL_MEETING_WEBHOOK_URL`.
+If `HIGHLEVEL_MEETING_WEBHOOK_URL` is blank, appointment requests will use `HIGHLEVEL_LEAD_WEBHOOK_URL`.
+
+Suggested HighLevel workflow actions:
+
+- Create or update contact using email and phone.
+- Add tags such as `Website Lead`, `Insurance Lead`, and the coverage type.
+- Create an opportunity in an insurance pipeline.
+- Send an internal notification to the assigned agent.
+- Start compliant follow-up only if the contact has opted in.
 
 ## Twilio SMS Automation
 

@@ -26,6 +26,8 @@ TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_FROM_PHONE = os.getenv("TWILIO_FROM_PHONE")
 TWILIO_VALIDATE_WEBHOOKS = os.getenv("TWILIO_VALIDATE_WEBHOOKS", "false").lower() == "true"
 PUBLIC_BACKEND_URL = os.getenv("PUBLIC_BACKEND_URL", "")
+HIGHLEVEL_LEAD_WEBHOOK_URL = os.getenv("HIGHLEVEL_LEAD_WEBHOOK_URL", "")
+HIGHLEVEL_MEETING_WEBHOOK_URL = os.getenv("HIGHLEVEL_MEETING_WEBHOOK_URL", "")
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
@@ -104,6 +106,21 @@ def log_sms_message(
         get_supabase().table("sms_messages").insert(row).execute()
     except Exception as exc:
         print(f"Could not log SMS message: {exc}")
+
+
+async def send_highlevel_webhook(webhook_url: str, payload: dict[str, Any]) -> str:
+    if not webhook_url:
+        return "not_configured"
+
+    try:
+        async with httpx.AsyncClient(timeout=12) as client:
+            response = await client.post(webhook_url, json=payload)
+        if response.status_code >= 400:
+            return f"failed: {response.status_code}"
+        return "sent"
+    except httpx.RequestError as exc:
+        print(f"Could not send HighLevel webhook: {exc}")
+        return "failed"
 
 
 def find_latest_lead_by_phone(phone: str) -> dict[str, Any] | None:
@@ -245,7 +262,7 @@ def health() -> dict[str, str]:
 
 
 @app.post("/leads")
-def create_lead(lead: LeadCreate) -> dict[str, Any]:
+async def create_lead(lead: LeadCreate) -> dict[str, Any]:
     if not lead.consentAccepted:
         raise HTTPException(status_code=400, detail="Consent is required before submitting this form.")
 
@@ -281,16 +298,39 @@ def create_lead(lead: LeadCreate) -> dict[str, Any]:
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Could not save lead to Supabase: {exc}") from exc
 
+    highlevel_status = await send_highlevel_webhook(
+        HIGHLEVEL_LEAD_WEBHOOK_URL,
+        {
+            "event": "lead_submitted",
+            "lead_id": lead_id,
+            "name": lead.name,
+            "email": str(lead.email),
+            "phone": lead.phone,
+            "state": lead.state,
+            "date_of_birth": lead.dob,
+            "beneficiary": lead.beneficiary,
+            "hobbies": lead.hobbies or "",
+            "coverage": lead.coverage,
+            "contact_preference": lead.contactPreference,
+            "consent_accepted": lead.consentAccepted,
+            "consent_language": lead.consentLanguage,
+            "consent_timestamp": lead.consentTimestamp or now,
+            "source_url": lead.sourceUrl or "",
+            "source": "senior_needs_marketing_website",
+        },
+    )
+
     return {
         "ok": True,
         "lead_id": lead_id,
         "outreachStatus": "queued",
+        "highlevel_status": highlevel_status,
         "message": "Lead received. A licensed agent can follow up by the preferred contact method.",
     }
 
 
 @app.post("/meetings")
-def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
+async def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
     meeting_id = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
 
@@ -322,6 +362,27 @@ def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
         get_supabase().table("meetings").insert(row).execute()
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Could not save meeting to Supabase: {exc}") from exc
+
+    highlevel_status = await send_highlevel_webhook(
+        HIGHLEVEL_MEETING_WEBHOOK_URL or HIGHLEVEL_LEAD_WEBHOOK_URL,
+        {
+            "event": "appointment_requested",
+            "meeting_id": meeting_id,
+            "lead_id": meeting.lead_id,
+            "name": meeting.name or "",
+            "email": str(meeting.email) if meeting.email else "",
+            "phone": meeting.phone or "",
+            "coverage": meeting.coverage or "",
+            "state": meeting.state or "",
+            "appointment_date": meeting.appointment_date,
+            "appointment_time": meeting.appointment_time,
+            "appointment_label": meeting.appointment_label,
+            "meeting_type": meeting.meeting_type,
+            "duration": meeting.duration,
+            "timezone": meeting.timezone,
+            "source": "senior_needs_marketing_website",
+        },
+    )
 
     sms_status = "not_configured"
     if meeting.phone and meeting.appointment_label:
@@ -357,6 +418,7 @@ def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
         "meeting_id": meeting_id,
         "status": "requested",
         "sms_status": sms_status,
+        "highlevel_status": highlevel_status,
         "message": "Meeting request saved.",
     }
 
