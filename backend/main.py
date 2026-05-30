@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 from typing import Any
 from uuid import uuid4
 
@@ -33,6 +33,14 @@ ALLOWED_ORIGINS = [
     for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
     if origin.strip()
 ]
+
+TIMEZONE_OFFSETS = {
+    "Eastern": "-05:00",
+    "Central": "-06:00",
+    "Mountain": "-07:00",
+    "Pacific": "-08:00",
+    "Local time": "-05:00",
+}
 
 app = FastAPI(title="Senior Needs Marketing API", version="1.0.0")
 
@@ -76,6 +84,17 @@ def validate_twilio_request(request: Request, form_data: dict[str, Any]) -> None
 
 def normalize_phone(phone: str | None) -> str:
     return "".join(ch for ch in (phone or "") if ch.isdigit())
+
+
+def build_appointment_start_iso(appointment_date: str, appointment_time: str, timezone_label: str) -> str:
+    try:
+        parsed_date = date.fromisoformat(appointment_date)
+        parsed_time = time.fromisoformat(appointment_time)
+    except ValueError:
+        return f"{appointment_date}T{appointment_time}"
+
+    offset = TIMEZONE_OFFSETS.get(timezone_label, TIMEZONE_OFFSETS["Local time"])
+    return f"{datetime.combine(parsed_date, parsed_time).isoformat()}{offset}"
 
 
 def log_sms_message(
@@ -333,6 +352,19 @@ async def create_lead(lead: LeadCreate) -> dict[str, Any]:
 async def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
     meeting_id = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
+    appointment_start_iso = build_appointment_start_iso(
+        meeting.appointment_date,
+        meeting.appointment_time,
+        meeting.timezone,
+    )
+    appointment_title = f"{meeting.name or 'Website Lead'} - {meeting.coverage or 'Insurance Review'}"
+    appointment_notes = (
+        f"Coverage: {meeting.coverage or 'Not provided'}\n"
+        f"State: {meeting.state or 'Not provided'}\n"
+        f"Phone: {meeting.phone or 'Not provided'}\n"
+        f"Email: {meeting.email or 'Not provided'}\n"
+        f"Requested time: {meeting.appointment_label}"
+    )
 
     row = {
         "id": meeting_id,
@@ -376,7 +408,10 @@ async def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
             "state": meeting.state or "",
             "appointment_date": meeting.appointment_date,
             "appointment_time": meeting.appointment_time,
+            "appointment_start_iso": appointment_start_iso,
             "appointment_label": meeting.appointment_label,
+            "appointment_title": appointment_title,
+            "appointment_notes": appointment_notes,
             "meeting_type": meeting.meeting_type,
             "duration": meeting.duration,
             "timezone": meeting.timezone,

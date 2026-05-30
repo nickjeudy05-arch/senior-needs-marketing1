@@ -73,6 +73,7 @@ When a visitor submits the website form, the backend saves the lead in Supabase 
 
 Create a second Inbound Webhook workflow for appointments and paste it into `HIGHLEVEL_MEETING_WEBHOOK_URL`.
 If `HIGHLEVEL_MEETING_WEBHOOK_URL` is blank, appointment requests will use `HIGHLEVEL_LEAD_WEBHOOK_URL`.
+Appointment payloads include `appointment_start_iso`, `appointment_title`, and `appointment_notes` for easier HighLevel calendar mapping.
 
 Suggested HighLevel workflow actions:
 

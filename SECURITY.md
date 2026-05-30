@@ -55,6 +55,8 @@ Create a second Inbound Webhook workflow for appointment requests and paste its 
 
 If you only want one HighLevel workflow, set only `HIGHLEVEL_LEAD_WEBHOOK_URL`; appointment requests will use that same webhook.
 
+Appointment webhook payloads include `appointment_start_iso`, `appointment_title`, and `appointment_notes` for HighLevel calendar mapping.
+
 ## Data Handling
 
 - The site should not ask for Social Security numbers, bank account numbers, Medicare ID numbers, or full medical records.
