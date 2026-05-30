@@ -599,7 +599,7 @@ function BookingPanel({ lead, onBooked }) {
 }
 
 function ChatBot({ lead, bookedTime }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       from: "bot",
