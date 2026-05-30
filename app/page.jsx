@@ -181,6 +181,14 @@ const assistantExamples = [
   "What information does an agent need before giving me a real quote?",
 ];
 
+const seoLibraryLinks = [
+  ["Term vs Whole Life", "/life-insurance/term-vs-whole-life"],
+  ["How Much Life Insurance Do I Need?", "/life-insurance/how-much-life-insurance-do-i-need"],
+  ["What Is Mortgage Protection?", "/mortgage-protection/what-is-mortgage-protection"],
+  ["Burial Insurance Cost", "/final-expense/burial-insurance-cost"],
+  ["Medicare Advantage vs Supplement", "/medicare/medicare-advantage-vs-supplement"],
+];
+
 const siteImages = {
   hero:
     "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1500&q=85",
@@ -998,6 +1006,14 @@ export default function HomePage() {
         <div className="section-heading">
           <p className="eyebrow">Insurance Learning Center</p>
           <h2>Clear educational slides for every major coverage path.</h2>
+        </div>
+        <div className="seo-link-row" aria-label="Popular insurance guides">
+          {seoLibraryLinks.map(([label, href]) => (
+            <Link href={href} key={href}>
+              {label}
+              <ChevronRight size={15} aria-hidden="true" />
+            </Link>
+          ))}
         </div>
         <div className="education-stack">
           {[

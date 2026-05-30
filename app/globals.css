@@ -2231,6 +2231,137 @@ footer p {
   line-height: 1.68;
 }
 
+.seo-link-row,
+.related-guides {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.seo-link-row a,
+.related-guides a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: #f7f7f5;
+  border: 1px solid rgba(11, 13, 16, 0.1);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.related-guides {
+  display: grid;
+  align-items: start;
+}
+
+.related-guides h3 {
+  margin: 18px 0 0;
+}
+
+.related-guides a {
+  justify-self: start;
+}
+
+.seo-hero {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(280px, 0.42fr);
+  gap: 34px;
+  align-items: center;
+  padding: clamp(48px, 7vw, 92px) clamp(18px, 5vw, 76px);
+}
+
+.seo-hero h1 {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.94;
+}
+
+.seo-hero p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+.seo-hero aside {
+  padding: 26px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 18px 60px rgba(17, 24, 39, 0.08);
+}
+
+.seo-hero aside strong {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+.seo-hero ul,
+.seo-article ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seo-hero li,
+.seo-article li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px;
+  align-items: start;
+  color: #334155;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.seo-hero li svg,
+.seo-article li svg {
+  color: #12805f;
+  margin-top: 2px;
+}
+
+.seo-article {
+  display: grid;
+  gap: 18px;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 5vw, 76px) 74px;
+}
+
+.seo-article article {
+  padding: clamp(24px, 4vw, 38px);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 18px 60px rgba(17, 24, 39, 0.07);
+}
+
+.seo-article h2 {
+  margin: 0 0 14px;
+  font-family: Newsreader, Georgia, serif;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+}
+
+.seo-article p {
+  color: #40534c;
+  font-size: 17px;
+  line-height: 1.68;
+}
+
+.seo-faq {
+  padding: 74px clamp(18px, 5vw, 76px);
+  background: #f7f7f5;
+}
+
 .chat {
   position: fixed;
   right: 22px;

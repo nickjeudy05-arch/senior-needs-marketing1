@@ -1,7 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, Check, UserRoundCheck } from "lucide-react";
+import { ArrowRight, Check, ChevronRight, UserRoundCheck } from "lucide-react";
 import SimpleHeader from "./SimpleHeader";
 import ProductEducation from "./ProductEducation";
+
+const guideLinks = {
+  "life-insurance": [
+    ["Term vs Whole Life", "/life-insurance/term-vs-whole-life"],
+    ["How Much Life Insurance Do I Need?", "/life-insurance/how-much-life-insurance-do-i-need"],
+  ],
+  "mortgage-protection": [["What Is Mortgage Protection?", "/mortgage-protection/what-is-mortgage-protection"]],
+  "final-expense": [["Burial Insurance Cost", "/final-expense/burial-insurance-cost"]],
+  medicare: [["Medicare Advantage vs Supplement", "/medicare/medicare-advantage-vs-supplement"]],
+};
 
 export default function CoveragePage({ page }) {
   return (
@@ -32,6 +42,17 @@ export default function CoveragePage({ page }) {
           {page.sections.map((section) => (
             <p key={section}>{section}</p>
           ))}
+          {guideLinks[page.slug] && (
+            <div className="related-guides">
+              <h3>Related Guides</h3>
+              {guideLinks[page.slug].map(([label, href]) => (
+                <Link href={href} key={href}>
+                  {label}
+                  <ChevronRight size={15} aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          )}
         </article>
         <aside>
           <h3>Good fit when you want</h3>
