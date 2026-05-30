@@ -2408,25 +2408,154 @@ footer p {
 }
 
 @media (max-width: 640px) {
+  body {
+    background: linear-gradient(180deg, #ffffff 0%, #f7f7f5 100%);
+  }
+
+  .topbar {
+    padding: 12px 14px;
+  }
+
   .wordmark {
     min-width: 0;
+  }
+
+  .logo-wordmark img {
+    width: 176px;
   }
 
   .wordmark strong {
     display: none;
   }
 
+  .menu-button {
+    display: none;
+  }
+
   .hero-new {
-    padding-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: auto;
+    padding: 14px 12px 36px;
+  }
+
+  .lead-form {
+    order: 1;
+    width: 100%;
+    padding: 20px 16px 18px;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(11, 13, 16, 0.12);
+  }
+
+  .form-head span,
+  .eyebrow {
+    margin-bottom: 8px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .form-head h1 {
+    font-size: 34px;
+    line-height: 0.98;
+  }
+
+  .form-head p,
+  .booking-panel p,
+  .process p,
+  .advisor p,
+  .section-heading p,
+  .marketplace-hero p:not(.eyebrow),
+  .comparison-section p:not(.eyebrow),
+  .education-intro p:not(.eyebrow),
+  .subpage-hero p,
+  .detail-page-grid p,
+  .about-page p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .form-grid {
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .field {
+    gap: 6px;
+  }
+
+  .field input,
+  .calendar-controls select,
+  .calendar-top input {
+    min-height: 46px;
+    border-radius: 12px;
+  }
+
+  .segmented {
+    gap: 8px;
+    margin: 16px 0 12px;
+  }
+
+  .segmented button {
+    min-height: 44px;
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  .preference {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .preference label {
+    flex: 1 1 130px;
+    min-height: 42px;
+    align-items: center;
+    padding: 0 12px;
+    background: #f7f7f5;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .consent {
+    font-size: 12px;
+  }
+
+  .primary-submit,
+  .confirm,
+  .call-link,
+  .ghost-call {
+    min-height: 50px;
+    border-radius: 13px;
   }
 
   .hero-art {
-    border-radius: 24px;
+    order: 2;
+    width: 100%;
+    min-height: 220px;
+    border-radius: 18px;
+    box-shadow: 0 18px 46px rgba(11, 13, 16, 0.12);
+  }
+
+  .hero-art img {
+    min-height: 220px;
   }
 
   .floating-card {
-    position: static;
-    margin: 10px;
+    max-width: calc(100% - 24px);
+    padding: 10px 12px;
+    border-radius: 13px;
+    font-size: 12px;
+  }
+
+  .card-one {
+    top: 12px;
+    left: 12px;
+  }
+
+  .card-two {
+    right: 12px;
+    bottom: 12px;
   }
 
   .form-grid,
@@ -2441,6 +2570,15 @@ footer p {
   .education-section,
   .explainer-section {
     grid-template-columns: 1fr;
+  }
+
+  .form-grid,
+  .segmented {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid .field:nth-child(7) {
+    grid-column: 1 / -1;
   }
 
   .education-board-head,
@@ -2542,20 +2680,205 @@ footer p {
     grid-template-columns: 1fr;
   }
 
-  .form-head h1 {
-    font-size: 40px;
+  .booking-panel,
+  .booked-banner,
+  .stat-strip {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .booking-panel {
+    padding: 22px 14px;
+    border-radius: 22px;
+  }
+
+  .booking-panel h2,
+  .section-heading h2,
+  .process h2,
+  .advisor h2,
+  .marketplace-hero h2,
+  .faq-section h2,
+  .comparison-section h2,
+  .education-intro h2,
+  .detail-page-grid h2 {
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .calendar-card {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .month-picker {
+    padding: 10px;
+  }
+
+  .month-header button {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .weekday-row,
+  .day-grid {
+    gap: 4px;
+  }
+
+  .day-cell {
+    min-height: 34px;
+    border-radius: 9px;
+    font-size: 12px;
+  }
+
+  .time-strip {
+    max-height: none;
+  }
+
+  .appointment-confirmation {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .appointment-confirmation strong {
+    font-size: 20px;
+  }
+
+  .appointment-confirmation p {
+    font-size: 15px;
+  }
+
+  .booked-banner {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+    border-radius: 22px;
+  }
+
+  .booked-badge {
+    width: 58px;
+    height: 58px;
+  }
+
+  .booked-banner h2 {
+    font-size: 32px;
+  }
+
+  .booked-banner p:last-child {
+    font-size: 15px;
+  }
+
+  .stat-strip {
+    border-radius: 18px;
+  }
+
+  .stat-strip div {
+    min-height: 92px;
+    padding: 18px;
+  }
+
+  .coverage,
+  .advanced-info,
+  .scenario-section,
+  .marketplace-section,
+  .education-library,
+  .comparison-section,
+  .process,
+  .trust-gallery,
+  .professional-proof,
+  .faq-section,
+  .advisor {
+    padding: 48px 14px;
+  }
+
+  .image-story {
+    padding: 0 14px 48px;
+  }
+
+  .service-card,
+  .advanced-grid article,
+  .scenario-grid article,
+  .marketplace-grid article,
+  .proof-card,
+  .faq-list article,
+  .advisor > div:first-child,
+  .advisor-panel {
+    min-height: auto;
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .image-story div {
+    min-height: 240px;
+    border-radius: 20px;
+  }
+
+  .trust-gallery img {
+    height: 220px;
+  }
+
+  .process img {
+    border-radius: 20px;
   }
 
   footer {
     display: grid;
+    padding: 28px 16px 110px;
   }
 
   .chat {
-    right: 16px;
-    bottom: 16px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+  }
+
+  .chat.open {
+    top: 72px;
+  }
+
+  .chat.open .chat-window {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    max-height: calc(100vh - 94px);
+  }
+
+  .messages {
+    max-height: none;
+  }
+
+  .chat-toggle {
+    min-height: 44px;
+    padding: 0 14px;
   }
 
   .quick-actions {
     grid-template-columns: 1fr;
+  }
+
+  .quick-actions button:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .form-grid,
+  .segmented {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .field:nth-child(7) {
+    grid-column: auto;
+  }
+
+  .form-head h1,
+  .booking-panel h2,
+  .section-heading h2,
+  .process h2,
+  .advisor h2,
+  .marketplace-hero h2,
+  .faq-section h2,
+  .comparison-section h2,
+  .education-intro h2,
+  .detail-page-grid h2 {
+    font-size: 31px;
   }
 }
