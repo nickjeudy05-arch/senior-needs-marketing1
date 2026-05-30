@@ -33,6 +33,15 @@ export default function TermsPage() {
         </article>
 
         <article>
+          <h2>Not a Government Agency</h2>
+          <p>
+            Senior Needs Marketing is not a government agency and is not affiliated with Medicare, the federal
+            government, or any state government program. Medicare plan information is educational and must be reviewed
+            against actual local availability and eligibility.
+          </p>
+        </article>
+
+        <article>
           <h2>No Legal, Tax, Medical, or Financial Advice</h2>
           <p>
             Website content, chat responses, and SMS responses are general information only. They are not legal, tax,
@@ -50,10 +59,36 @@ export default function TermsPage() {
         </article>
 
         <article>
+          <h2>AI Assistant and SMS Replies</h2>
+          <p>
+            Chat and SMS assistant responses are automated educational support tools. They may help explain insurance
+            concepts and prepare questions for an agent, but they are not final recommendations and should not be relied
+            on as a substitute for a licensed agent review.
+          </p>
+        </article>
+
+        <article>
+          <h2>Third-Party Services</h2>
+          <p>
+            The website may use third-party technology providers for hosting, database storage, messaging, analytics,
+            communications, and appointment support. Those services may have their own terms and privacy practices.
+          </p>
+        </article>
+
+        <article>
           <h2>Acceptable Use</h2>
           <p>
             Do not submit false information, attempt to access systems without authorization, or use the website in a way
             that interferes with normal operation.
+          </p>
+        </article>
+
+        <article>
+          <h2>Limitation of Liability</h2>
+          <p>
+            To the fullest extent allowed by law, Senior Needs Marketing is not responsible for indirect, incidental, or
+            consequential damages arising from use of this website, delayed communications, message delivery issues, or
+            reliance on general educational information.
           </p>
         </article>
 

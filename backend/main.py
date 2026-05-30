@@ -5,11 +5,12 @@ from uuid import uuid4
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, Form, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 from supabase import Client, create_client
 from twilio.rest import Client as TwilioClient
+from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 
 load_dotenv()
@@ -23,6 +24,8 @@ OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "Senior Needs Marketing")
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_FROM_PHONE = os.getenv("TWILIO_FROM_PHONE")
+TWILIO_VALIDATE_WEBHOOKS = os.getenv("TWILIO_VALIDATE_WEBHOOKS", "false").lower() == "true"
+PUBLIC_BACKEND_URL = os.getenv("PUBLIC_BACKEND_URL", "")
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
@@ -53,6 +56,20 @@ def get_twilio() -> TwilioClient | None:
     if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_FROM_PHONE:
         return None
     return TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+
+def validate_twilio_request(request: Request, form_data: dict[str, Any]) -> None:
+    if not TWILIO_VALIDATE_WEBHOOKS:
+        return
+    if not TWILIO_AUTH_TOKEN:
+        raise HTTPException(status_code=500, detail="Twilio validation is enabled but TWILIO_AUTH_TOKEN is missing.")
+
+    signature = request.headers.get("x-twilio-signature", "")
+    webhook_url = f"{PUBLIC_BACKEND_URL.rstrip()}{request.url.path}" if PUBLIC_BACKEND_URL else str(request.url)
+    validator = RequestValidator(TWILIO_AUTH_TOKEN)
+
+    if not validator.validate(webhook_url, form_data, signature):
+        raise HTTPException(status_code=403, detail="Invalid Twilio webhook signature.")
 
 
 def normalize_phone(phone: str | None) -> str:
@@ -349,12 +366,15 @@ async def chat_with_assistant(request: AssistantRequest) -> dict[str, Any]:
 
 
 @app.post("/twilio/inbound-sms")
-async def twilio_inbound_sms(
-    From: str = Form(default=""),
-    To: str = Form(default=""),
-    Body: str = Form(default=""),
-    MessageSid: str = Form(default=""),
-) -> Response:
+async def twilio_inbound_sms(request: Request) -> Response:
+    form = await request.form()
+    form_data = {key: str(value) for key, value in form.items()}
+    validate_twilio_request(request, form_data)
+
+    From = form_data.get("From", "")
+    To = form_data.get("To", "")
+    Body = form_data.get("Body", "")
+    MessageSid = form_data.get("MessageSid", "")
     incoming_text = (Body or "").strip()
     lead = find_latest_lead_by_phone(From)
     lead_id = lead.get("id") if lead else None

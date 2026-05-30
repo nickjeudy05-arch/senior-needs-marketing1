@@ -32,6 +32,15 @@ export default function PrivacyPage() {
         </article>
 
         <article>
+          <h2>Insurance Information</h2>
+          <p>
+            We may use the insurance-related information you provide to help prepare a needs-based conversation with a
+            licensed agent. Please do not submit Social Security numbers, bank account details, Medicare ID numbers,
+            driver license numbers, or full medical records through this website, chat, or SMS.
+          </p>
+        </article>
+
+        <article>
           <h2>SMS and Mobile Information</h2>
           <p>
             No mobile information will be shared with third parties or affiliates for marketing or promotional
@@ -54,6 +63,15 @@ export default function PrivacyPage() {
         </article>
 
         <article>
+          <h2>Licensed Agents and Carriers</h2>
+          <p>
+            If you request an insurance review, your information may be shared with a licensed insurance agent or
+            appropriate brokerage support team member so they can respond to your request. If you choose to apply for
+            coverage, carrier-specific applications and disclosures may apply.
+          </p>
+        </article>
+
+        <article>
           <h2>Information Security</h2>
           <p>
             We use reasonable administrative, technical, and organizational safeguards to protect submitted information.
@@ -67,6 +85,30 @@ export default function PrivacyPage() {
           <p>
             You can ask us to update or remove your information from our active follow-up lists. You can opt out of SMS
             messages at any time by replying STOP.
+          </p>
+        </article>
+
+        <article>
+          <h2>Retention</h2>
+          <p>
+            We keep lead, appointment, and communication records only as long as reasonably needed for business,
+            compliance, customer-care, dispute-resolution, and legal purposes.
+          </p>
+        </article>
+
+        <article>
+          <h2>Children</h2>
+          <p>
+            This website is intended for adults requesting insurance information. We do not knowingly collect
+            information from children under 13.
+          </p>
+        </article>
+
+        <article>
+          <h2>Policy Updates</h2>
+          <p>
+            We may update this Privacy Policy from time to time. The updated version will be posted on this page with a
+            revised effective date.
           </p>
         </article>
 
