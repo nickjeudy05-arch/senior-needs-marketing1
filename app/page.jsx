@@ -841,6 +841,7 @@ function ChatBot({ lead, bookedTime }) {
 export default function HomePage() {
   const [lead, setLead] = useState(null);
   const [bookedTime, setBookedTime] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   function handleLeadSubmitted(nextLead) {
     setLead(nextLead);
@@ -864,28 +865,30 @@ export default function HomePage() {
           ))}
           <a href="#start">Match With Agent</a>
         </nav>
-        <button className="menu-button" aria-label="Open menu" type="button">
-          <Menu size={22} />
+        <button
+          className="menu-button"
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          type="button"
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
+        {menuOpen && (
+          <nav className="mobile-dropdown" aria-label="Mobile navigation">
+            {navLinks.map((link) => (
+              <Link href={link.href} key={link.href} onClick={() => setMenuOpen(false)}>
+                {link.label}
+                <ChevronRight size={15} aria-hidden="true" />
+              </Link>
+            ))}
+            <a href="#start" onClick={() => setMenuOpen(false)}>
+              Match With Agent
+              <ChevronRight size={15} aria-hidden="true" />
+            </a>
+          </nav>
+        )}
       </header>
-      <nav className="mobile-tabs" aria-label="Mobile quick navigation">
-        <a href="#start">
-          <UserRoundCheck size={16} aria-hidden="true" />
-          Start
-        </a>
-        <a href="#coverage">
-          <ShieldCheck size={16} aria-hidden="true" />
-          Coverage
-        </a>
-        <a href="#learn">
-          <ClipboardCheck size={16} aria-hidden="true" />
-          Learn
-        </a>
-        <a href="#process">
-          <CalendarClock size={16} aria-hidden="true" />
-          Process
-        </a>
-      </nav>
 
       <section className="hero-new" id="start">
         <div className="hero-art">
