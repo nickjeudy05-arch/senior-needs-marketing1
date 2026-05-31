@@ -235,6 +235,7 @@ button {
 .field {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .field span {
@@ -246,6 +247,7 @@ button {
 .field input,
 .field select {
   width: 100%;
+  min-width: 0;
   min-height: 50px;
   padding: 0 14px;
   color: var(--ink);
@@ -2678,8 +2680,10 @@ footer p {
   .field select,
   .calendar-controls select,
   .calendar-top input {
+    max-width: 100%;
     min-height: 46px;
     border-radius: 12px;
+    font-size: 16px;
   }
 
   .segmented {
@@ -2768,6 +2772,8 @@ footer p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .form-grid .field:nth-child(5),
+  .form-grid .field:nth-child(6),
   .form-grid .field:nth-child(7) {
     grid-column: 1 / -1;
   }
@@ -3093,6 +3099,8 @@ footer p {
     grid-template-columns: 1fr;
   }
 
+  .form-grid .field:nth-child(5),
+  .form-grid .field:nth-child(6),
   .form-grid .field:nth-child(7) {
     grid-column: auto;
   }
