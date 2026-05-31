@@ -3,6 +3,7 @@ const siteUrl = "https://seniorneedsmarketinginsurance.com";
 const routes = [
   "",
   "/about",
+  "/agents",
   "/life-insurance",
   "/life-insurance/term-vs-whole-life",
   "/life-insurance/how-much-life-insurance-do-i-need",

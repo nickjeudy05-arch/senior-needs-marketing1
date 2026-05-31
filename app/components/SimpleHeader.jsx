@@ -6,7 +6,7 @@ import { ChevronRight, Menu, UserRoundCheck, X } from "lucide-react";
 import { navLinks } from "../coverageData";
 
 const productNavLinks = navLinks.filter((link) =>
-  ["/life-insurance", "/mortgage-protection", "/final-expense", "/medicare"].includes(link.href),
+  ["/life-insurance", "/mortgage-protection", "/final-expense", "/medicare", "/agents"].includes(link.href),
 );
 
 export default function SimpleHeader() {

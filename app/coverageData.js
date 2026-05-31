@@ -4,6 +4,7 @@ export const navLinks = [
   { href: "/mortgage-protection", label: "Mortgage Protection" },
   { href: "/final-expense", label: "Final Expense" },
   { href: "/medicare", label: "Medicare" },
+  { href: "/agents", label: "Meet Our Agents" },
   { href: "/about", label: "About" },
 ];
 
