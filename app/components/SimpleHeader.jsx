@@ -15,7 +15,7 @@ export default function SimpleHeader() {
   return (
     <header className="topbar">
       <Link href="/" className="wordmark logo-wordmark" aria-label="Senior Needs Marketing home">
-        <img src="/snm-logo.svg" alt="Senior Needs Marketing" />
+        <img src="/snm-logo.png" alt="Senior Needs Marketing LLC" />
       </Link>
       <nav aria-label="Primary navigation">
         {navLinks.map((link) => (
