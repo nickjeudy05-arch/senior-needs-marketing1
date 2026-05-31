@@ -216,6 +216,61 @@ const initialLead = {
   contactPreference: "Text me",
 };
 
+const stateOptions = [
+  ["", "Select state"],
+  ["AL", "Alabama"],
+  ["AK", "Alaska"],
+  ["AZ", "Arizona"],
+  ["AR", "Arkansas"],
+  ["CA", "California"],
+  ["CO", "Colorado"],
+  ["CT", "Connecticut"],
+  ["DE", "Delaware"],
+  ["FL", "Florida"],
+  ["GA", "Georgia"],
+  ["HI", "Hawaii"],
+  ["ID", "Idaho"],
+  ["IL", "Illinois"],
+  ["IN", "Indiana"],
+  ["IA", "Iowa"],
+  ["KS", "Kansas"],
+  ["KY", "Kentucky"],
+  ["LA", "Louisiana"],
+  ["ME", "Maine"],
+  ["MD", "Maryland"],
+  ["MA", "Massachusetts"],
+  ["MI", "Michigan"],
+  ["MN", "Minnesota"],
+  ["MS", "Mississippi"],
+  ["MO", "Missouri"],
+  ["MT", "Montana"],
+  ["NE", "Nebraska"],
+  ["NV", "Nevada"],
+  ["NH", "New Hampshire"],
+  ["NJ", "New Jersey"],
+  ["NM", "New Mexico"],
+  ["NY", "New York"],
+  ["NC", "North Carolina"],
+  ["ND", "North Dakota"],
+  ["OH", "Ohio"],
+  ["OK", "Oklahoma"],
+  ["OR", "Oregon"],
+  ["PA", "Pennsylvania"],
+  ["RI", "Rhode Island"],
+  ["SC", "South Carolina"],
+  ["SD", "South Dakota"],
+  ["TN", "Tennessee"],
+  ["TX", "Texas"],
+  ["UT", "Utah"],
+  ["VT", "Vermont"],
+  ["VA", "Virginia"],
+  ["WA", "Washington"],
+  ["WV", "West Virginia"],
+  ["WI", "Wisconsin"],
+  ["WY", "Wyoming"],
+  ["DC", "Washington, DC"],
+];
+
 function splitName(fullName) {
   const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
   return {
@@ -239,6 +294,21 @@ function Field({ label, name, type = "text", value, onChange, placeholder, requi
         placeholder={placeholder}
         required={required}
       />
+    </label>
+  );
+}
+
+function StateField({ value, onChange }) {
+  return (
+    <label className="field">
+      <span>State</span>
+      <select name="state" value={value} onChange={onChange} required>
+        {stateOptions.map(([valueOption, label]) => (
+          <option key={valueOption || "blank"} value={valueOption} disabled={!valueOption}>
+            {label}
+          </option>
+        ))}
+      </select>
     </label>
   );
 }
@@ -298,7 +368,7 @@ function LeadForm({ onSubmitted }) {
         <Field label="Name" name="name" value={lead.name} onChange={updateLead} placeholder="Full name" />
         <Field label="Email" name="email" type="email" value={lead.email} onChange={updateLead} placeholder="you@example.com" />
         <Field label="Phone" name="phone" type="tel" value={lead.phone} onChange={updateLead} placeholder="Best phone number" />
-        <Field label="State" name="state" value={lead.state} onChange={updateLead} placeholder="Florida, Texas, PA..." />
+        <StateField value={lead.state} onChange={updateLead} />
         <Field label="Date of Birth" name="dob" type="date" value={lead.dob} onChange={updateLead} placeholder="MM/DD/YYYY" />
         <Field label="Beneficiary" name="beneficiary" value={lead.beneficiary} onChange={updateLead} placeholder="Spouse, child, estate..." />
         <Field label="Hobbies" name="hobbies" value={lead.hobbies} onChange={updateLead} placeholder="Travel, gardening, golf..." required={false} />
@@ -986,6 +1056,28 @@ export default function HomePage() {
               </article>
             );
           })}
+        </div>
+      </section>
+
+      <section className="mobile-resource-hub" aria-label="Mobile insurance pages">
+        <div>
+          <p className="eyebrow">Explore By Topic</p>
+          <h2>Choose the page that matches your question.</h2>
+        </div>
+        <div className="mobile-resource-grid">
+          {[
+            ["Life Insurance", "/life-insurance"],
+            ["Mortgage Protection", "/mortgage-protection"],
+            ["Final Expense", "/final-expense"],
+            ["Medicare", "/medicare"],
+            ["Term vs Whole Life", "/life-insurance/term-vs-whole-life"],
+            ["Burial Insurance Cost", "/final-expense/burial-insurance-cost"],
+          ].map(([label, href]) => (
+            <Link href={href} key={href}>
+              {label}
+              <ChevronRight size={15} aria-hidden="true" />
+            </Link>
+          ))}
         </div>
       </section>
 

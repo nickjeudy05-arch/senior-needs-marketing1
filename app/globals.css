@@ -37,7 +37,8 @@ a {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -242,7 +243,8 @@ button {
   font-weight: 800;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   min-height: 50px;
   padding: 0 14px;
@@ -253,7 +255,20 @@ button {
   outline: 3px solid transparent;
 }
 
-.field input:focus {
+.field select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #475467 50%),
+    linear-gradient(135deg, #475467 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 52%,
+    calc(100% - 12px) 52%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.field input:focus,
+.field select:focus {
   border-color: var(--blue);
   outline-color: rgba(11, 99, 206, 0.14);
 }
@@ -768,6 +783,10 @@ button {
     url("https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=85") center/cover;
   border-radius: 28px;
   box-shadow: var(--shadow);
+}
+
+.mobile-resource-hub {
+  display: none;
 }
 
 .marketplace-hero h2,
@@ -2656,6 +2675,7 @@ footer p {
   }
 
   .field input,
+  .field select,
   .calendar-controls select,
   .calendar-top input {
     min-height: 46px;
@@ -2947,17 +2967,54 @@ footer p {
   }
 
   .coverage,
-  .advanced-info,
-  .scenario-section,
-  .marketplace-section,
-  .education-library,
   .comparison-section,
   .process,
-  .trust-gallery,
-  .professional-proof,
-  .faq-section,
   .advisor {
     padding: 48px 14px;
+  }
+
+  .marketplace-section,
+  .education-library,
+  .advanced-info,
+  .scenario-section,
+  .image-story,
+  .trust-gallery,
+  .professional-proof,
+  .faq-section {
+    display: none;
+  }
+
+  .mobile-resource-hub {
+    display: grid;
+    gap: 18px;
+    padding: 44px 14px;
+    background: #ffffff;
+  }
+
+  .mobile-resource-hub h2 {
+    margin: 0;
+    font-family: Newsreader, Georgia, serif;
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .mobile-resource-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .mobile-resource-grid a {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 14px;
+    color: var(--ink);
+    background: #f7f7f5;
+    border: 1px solid rgba(11, 13, 16, 0.09);
+    border-radius: 14px;
+    font-weight: 900;
   }
 
   .image-story {
