@@ -2,7 +2,7 @@ import SimpleHeader from "../components/SimpleHeader";
 
 export const metadata = {
   title: "Privacy Policy | Senior Needs Marketing",
-  description: "Privacy practices for Senior Needs Marketing website leads, appointment requests, and SMS communications.",
+  description: "Privacy practices for Senior Needs Marketing brokerage leads, appointment requests, and SMS communications.",
 };
 
 export default function PrivacyPage() {
@@ -26,8 +26,8 @@ export default function PrivacyPage() {
         <article>
           <h2>How We Use Information</h2>
           <p>
-            We use submitted information to respond to insurance requests, match you with a licensed agent, confirm
-            appointments, answer questions, maintain lead records, and improve our customer-care process.
+            We use submitted information to respond to insurance requests, match you with a licensed agent at the
+            brokerage, confirm appointments, answer questions, maintain lead records, and improve our customer-care process.
           </p>
         </article>
 
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
           <p>
             We may use the insurance-related information you provide to help prepare a needs-based conversation with a
             licensed agent. Please do not submit Social Security numbers, bank account details, Medicare ID numbers,
-            driver license numbers, or full medical records through this website, chat, or SMS.
+            driver license numbers, or full medical records through Senior Needs Marketing forms, chat, or SMS.
           </p>
         </article>
 
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
         <article>
           <h2>Service Providers</h2>
           <p>
-            We may use trusted service providers to operate the website, store lead information, send appointment
+            We may use trusted service providers to operate brokerage systems, store lead information, send appointment
             messages, and support customer communications. These providers are used only to help deliver requested
             services and business operations.
           </p>
@@ -65,8 +65,8 @@ export default function PrivacyPage() {
         <article>
           <h2>Licensed Agents and Carriers</h2>
           <p>
-            If you request an insurance review, your information may be shared with a licensed insurance agent or
-            appropriate brokerage support team member so they can respond to your request. If you choose to apply for
+            If you request an insurance review, your information may be shared with a licensed insurance agent at the
+            brokerage or an appropriate brokerage support team member so they can respond to your request. If you choose to apply for
             coverage, carrier-specific applications and disclosures may apply.
           </p>
         </article>
@@ -99,7 +99,7 @@ export default function PrivacyPage() {
         <article>
           <h2>Children</h2>
           <p>
-            This website is intended for adults requesting insurance information. We do not knowingly collect
+            Senior Needs Marketing services are intended for adults requesting insurance information. We do not knowingly collect
             information from children under 13.
           </p>
         </article>

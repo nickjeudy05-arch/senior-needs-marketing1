@@ -17,9 +17,9 @@ export default function SmsTermsPage() {
         <article>
           <h2>Program Description</h2>
           <p>
-            Senior Needs Marketing may send SMS messages to people who submit a website form, request insurance
+            Senior Needs Marketing may send SMS messages to people who submit a brokerage form, request insurance
             information, or book an appointment. Messages may include appointment confirmations, appointment reminders,
-            customer-care replies, and responses to insurance questions.
+            licensed agent follow-up, customer-care replies, and responses to insurance questions.
           </p>
         </article>
 
@@ -38,8 +38,8 @@ export default function SmsTermsPage() {
         <article>
           <h2>Opt-In</h2>
           <p>
-            You opt in by entering your phone number on our website form and checking the consent box before submitting
-            your request. Consent to receive text messages is not required to buy any product or service.
+            You opt in by entering your phone number on a Senior Needs Marketing form and checking the consent box
+            before submitting your request. Consent to receive text messages is not required to buy any product or service.
           </p>
         </article>
 

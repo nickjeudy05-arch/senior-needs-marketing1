@@ -262,7 +262,7 @@ class MeetingCreate(BaseModel):
     appointment_date: str = Field(min_length=1, max_length=20)
     appointment_time: str = Field(min_length=1, max_length=20)
     appointment_label: str = Field(min_length=1, max_length=160)
-    meeting_type: str = Field(default="Phone review", max_length=80)
+    meeting_type: str = Field(default="Phone Review", max_length=80)
     duration: str = Field(default="30 minutes", max_length=40)
     timezone: str = Field(default="Local time", max_length=80)
 

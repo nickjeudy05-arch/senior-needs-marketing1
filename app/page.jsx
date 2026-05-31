@@ -217,7 +217,7 @@ const initialLead = {
 };
 
 const stateOptions = [
-  ["", "Select state"],
+  ["", "Select State"],
   ["AL", "Alabama"],
   ["AK", "Alaska"],
   ["AZ", "Arizona"],
@@ -357,7 +357,7 @@ function LeadForm({ onSubmitted }) {
     <form className="lead-form" onSubmit={submitLead}>
       <div className="form-head">
         <span>Start Here</span>
-        <h1>Insurance help built around your life, state, and goals.</h1>
+        <h1>Insurance Guidance Built Around Your Life, State, and Goals.</h1>
         <p>
           Tell us the basics. Senior Needs Marketing will route your request
           to a licensed agent who can review options for your state.
@@ -396,7 +396,7 @@ function LeadForm({ onSubmitted }) {
             checked={lead.contactPreference === "Text me"}
             onChange={updateLead}
           />
-          Text me
+          Text Me
         </label>
         <label>
           <input
@@ -406,7 +406,7 @@ function LeadForm({ onSubmitted }) {
             checked={lead.contactPreference === "Call me"}
             onChange={updateLead}
           />
-          Call me
+          Call Me
         </label>
       </div>
 
@@ -503,7 +503,7 @@ function BookingPanel({ lead, onBooked }) {
     return [...blanks, ...days];
   }, [today, visibleMonth]);
 
-  const [meetingType, setMeetingType] = useState("Phone review");
+  const [meetingType, setMeetingType] = useState("Phone Review");
   const [duration, setDuration] = useState("30 minutes");
   const [timezone, setTimezone] = useState("Local time");
 
@@ -565,7 +565,7 @@ function BookingPanel({ lead, onBooked }) {
     <section className="booking-panel">
       <div>
         <p className="eyebrow">Request Received</p>
-        <h2>{lead.name ? `${lead.name}, choose your agent appointment.` : "Choose your agent appointment."}</h2>
+        <h2>{lead.name ? `${lead.name}, Choose Your Agent Appointment.` : "Choose Your Agent Appointment."}</h2>
         <p>
           Your {lead.coverage} request is ready for {lead.state || "your state"}. Pick any date and any time
           between 9:00 AM and 10:00 PM. The assistant will queue a{" "}
@@ -577,9 +577,9 @@ function BookingPanel({ lead, onBooked }) {
           <label>
             <span>Meeting Type</span>
             <select value={meetingType} onChange={(event) => setMeetingType(event.target.value)}>
-              <option>Phone review</option>
-              <option>Virtual appointment</option>
-              <option>Text-first follow-up</option>
+              <option>Phone Review</option>
+              <option>Virtual Appointment</option>
+              <option>Text-First Follow-Up</option>
             </select>
           </label>
           <label>
@@ -648,7 +648,7 @@ function BookingPanel({ lead, onBooked }) {
           </label>
           <div className="appointment-summary">
             <span>Selected</span>
-            <strong>{date ? formatDate(date) : "Choose a date"}</strong>
+            <strong>{date ? formatDate(date) : "Choose a Date"}</strong>
             <p>{formatTime(time)} | {duration} | {meetingType}</p>
           </div>
         </div>
@@ -671,7 +671,7 @@ function BookingPanel({ lead, onBooked }) {
               <Check size={24} aria-hidden="true" />
             </div>
             <div>
-              <strong>You are booked to speak with a licensed agent</strong>
+              <strong>You Are Booked to Speak With a Licensed Agent</strong>
               <p>{confirmed}</p>
               <span>
                 We received your appointment request for {lead.coverage}. A
@@ -892,7 +892,7 @@ function ChatBot({ lead, bookedTime }) {
             <Bot size={22} aria-hidden="true" />
             <div>
               <strong>Senior Needs Assistant</strong>
-              <span>Compares situations and helps book.</span>
+              <span>Compares Situations and Helps Book.</span>
             </div>
           </div>
           <div className="messages">
@@ -901,7 +901,7 @@ function ChatBot({ lead, bookedTime }) {
                 {message.text}
               </p>
             ))}
-            {isThinking && <p className="bot">Thinking through your situation...</p>}
+            {isThinking && <p className="bot">Reviewing Your Question...</p>}
           </div>
           {!hasUserMessage && (
             <div className="quick-actions">
@@ -991,11 +991,11 @@ export default function HomePage() {
           />
           <div className="floating-card card-one">
             <BadgeCheck size={22} aria-hidden="true" />
-            Licensed agent guidance
+            Licensed Agent Guidance
           </div>
           <div className="floating-card card-two">
             <Phone size={22} aria-hidden="true" />
-            Any state. A licensed agent follows up.
+            Any State. Licensed Agent Follow-Up.
           </div>
         </div>
         <LeadForm onSubmitted={handleLeadSubmitted} />
@@ -1010,7 +1010,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="eyebrow">Appointment Booked</p>
-            <h2>You are scheduled to speak with a licensed agent.</h2>
+            <h2>You Are Scheduled to Speak With a Licensed Agent.</h2>
             <p>
               Appointment: <strong>{bookedTime}</strong>. An agent will follow
               up using your selected contact preference to confirm and prepare
@@ -1032,7 +1032,7 @@ export default function HomePage() {
       <section className="coverage" id="coverage">
         <div className="section-heading">
           <p className="eyebrow">Coverage Built For Your Next Chapter</p>
-          <h2>One brokerage. Four major protection needs.</h2>
+          <h2>One Brokerage. Four Major Protection Needs.</h2>
         </div>
         <div className="service-grid">
           {services.map((service) => {
@@ -1051,7 +1051,7 @@ export default function HomePage() {
                 <h3>{service.title}</h3>
                 <p>{service.detail}</p>
                 <Link href={href}>
-                  Learn more <ChevronRight size={16} aria-hidden="true" />
+                  Learn More <ChevronRight size={16} aria-hidden="true" />
                 </Link>
               </article>
             );
@@ -1062,7 +1062,7 @@ export default function HomePage() {
       <section className="mobile-resource-hub" aria-label="Mobile insurance pages">
         <div>
           <p className="eyebrow">Explore By Topic</p>
-          <h2>Choose the page that matches your question.</h2>
+          <h2>Choose the Page That Matches Your Question.</h2>
         </div>
         <div className="mobile-resource-grid">
           {[
@@ -1084,11 +1084,12 @@ export default function HomePage() {
       <section className="marketplace-section">
         <div className="marketplace-hero">
           <p className="eyebrow">Professional Marketplace Experience</p>
-          <h2>Designed to feel like a brokerage, not a landing page.</h2>
+          <h2>Designed to Feel Like a Brokerage, Not a Landing Page.</h2>
           <p>
-            The site gathers enough context to support a serious coverage
-            conversation: state, age, beneficiaries, goals, timing, and product
-            interest. That gives the follow-up agent a stronger starting point.
+            Senior Needs Marketing gathers enough context to support a serious
+            brokerage conversation: state, age, beneficiaries, goals, timing,
+            and product interest. That gives the matched licensed agent a
+            stronger starting point.
           </p>
         </div>
         <div className="marketplace-grid">
@@ -1108,7 +1109,7 @@ export default function HomePage() {
       <section className="education-library" id="learn">
         <div className="section-heading">
           <p className="eyebrow">Insurance Learning Center</p>
-          <h2>Clear educational slides for every major coverage path.</h2>
+          <h2>Clear Educational Slides for Every Major Coverage Path.</h2>
         </div>
         <div className="seo-link-row" aria-label="Popular insurance guides">
           {seoLibraryLinks.map(([label, href]) => (
@@ -1133,7 +1134,7 @@ export default function HomePage() {
       <section className="advanced-info">
         <div className="section-heading">
           <p className="eyebrow">More Than a Quote Form</p>
-          <h2>A guided insurance intake built for real conversations.</h2>
+          <h2>A Guided Insurance Intake Built for Real Conversations.</h2>
         </div>
         <div className="advanced-grid">
           {advancedTopics.map((topic) => {
@@ -1152,7 +1153,7 @@ export default function HomePage() {
       <section className="scenario-section">
         <div className="section-heading">
           <p className="eyebrow">Common Client Situations</p>
-          <h2>Different needs should lead to different conversations.</h2>
+          <h2>Different Needs Should Lead to Different Conversations.</h2>
         </div>
         <div className="scenario-grid">
           {scenarioCards.map((scenario) => (
@@ -1171,11 +1172,12 @@ export default function HomePage() {
       <section className="comparison-section">
         <div>
           <p className="eyebrow">How the Matching Works</p>
-          <h2>From question to agent follow-up.</h2>
+          <h2>From Question to Licensed Agent Follow-Up.</h2>
           <p>
             Senior Needs Marketing does not force everyone into one product.
-            The site collects context, explains common paths, and prepares a
-            licensed agent to follow up with state-aware options.
+            The brokerage collects context, explains common paths, and matches
+            each request with a licensed agent who can follow up with
+            state-aware options.
           </p>
         </div>
         <div className="comparison-table">
@@ -1200,21 +1202,21 @@ export default function HomePage() {
             src={siteImages.family}
             alt="Family smiling together outdoors"
           />
-          <span>Family protection</span>
+          <span>Family Protection</span>
         </div>
         <div>
           <img
             src={siteImages.planning}
             alt="Financial paperwork and planning notes"
           />
-          <span>Clear plan reviews</span>
+          <span>Clear Plan Reviews</span>
         </div>
         <div>
           <img
             src={siteImages.advisor}
             alt="Professional advisor in a meeting"
           />
-          <span>Professional guidance</span>
+          <span>Professional Guidance</span>
         </div>
       </section>
 
@@ -1225,12 +1227,12 @@ export default function HomePage() {
         />
         <div>
           <p className="eyebrow">A Smarter Follow-Up Flow</p>
-          <h2>Submit once, then the assistant keeps the conversation moving.</h2>
+          <h2>Submit Once, Then the Assistant Keeps the Conversation Moving.</h2>
           <ul>
             <li><Check size={19} /> Your form creates a lead record.</li>
             <li><Check size={19} /> You are offered appointment times immediately.</li>
-            <li><Check size={19} /> The chatbot answers questions before and after booking.</li>
-            <li><Check size={19} /> A licensed agent receives the context needed for a focused follow-up.</li>
+            <li><Check size={19} /> The assistant answers questions before and after booking.</li>
+            <li><Check size={19} /> A licensed agent at the brokerage receives the context needed for a focused follow-up.</li>
           </ul>
         </div>
       </section>
@@ -1240,7 +1242,7 @@ export default function HomePage() {
           <img src={siteImages.appointment} alt="Calendar appointment planning" />
           <div>
             <Clock size={24} aria-hidden="true" />
-            <h3>Evening appointments available</h3>
+            <h3>Evening Appointments Available</h3>
             <p>Visitors can choose any date and book from 9:00 AM through 10:00 PM.</p>
           </div>
         </article>
@@ -1251,8 +1253,8 @@ export default function HomePage() {
           />
           <div>
             <ShieldCheck size={24} aria-hidden="true" />
-            <h3>Needs-based coverage review</h3>
-            <p>The site guides people toward life, mortgage, final expense, or Medicare support.</p>
+            <h3>Needs-Based Coverage Review</h3>
+            <p>Senior Needs Marketing guides people toward life, mortgage, final expense, or Medicare support.</p>
           </div>
         </article>
       </section>
@@ -1280,7 +1282,7 @@ export default function HomePage() {
           <h3>Clear Next Step</h3>
           <p>
             Every path leads to one action: get matched with a licensed agent
-            who can review real availability and eligibility.
+            at the brokerage who can review real availability and eligibility.
           </p>
         </div>
       </section>
@@ -1288,7 +1290,7 @@ export default function HomePage() {
       <section className="faq-section">
         <div>
           <p className="eyebrow">Questions Before Booking</p>
-          <h2>Helpful answers before a licensed agent follows up.</h2>
+          <h2>Helpful Answers Before a Licensed Agent Follows Up.</h2>
         </div>
         <div className="faq-list">
           {professionalFaqs.map(([question, answer]) => (
@@ -1303,11 +1305,11 @@ export default function HomePage() {
       <section className="advisor" id="about">
         <div>
           <p className="eyebrow">National Agent Routing</p>
-          <h2>A licensed agent reaches out based on your state and needs.</h2>
+          <h2>A Licensed Agent Reaches Out Based on Your State and Needs.</h2>
           <p>
             Senior Needs Marketing helps families, homeowners, working adults,
             retirees, and Medicare clients compare coverage across the country
-            without pressure or one-size-fits-all recommendations.
+            by matching each request with a licensed agent at the brokerage.
           </p>
           <a className="call-link" href="#start">
             <UserRoundCheck size={20} aria-hidden="true" />
@@ -1316,7 +1318,7 @@ export default function HomePage() {
         </div>
         <div className="advisor-panel">
           <UserRound size={42} aria-hidden="true" />
-          <h3>What people can ask the bot</h3>
+          <h3>What Visitors Can Ask the Assistant</h3>
           <p>Eligibility, plan types, state availability, beneficiaries, appointment times, Medicare basics, and what information is needed for a quote.</p>
         </div>
       </section>
@@ -1331,7 +1333,7 @@ export default function HomePage() {
             <Link href="/sms-terms">SMS Terms</Link>
           </div>
         </div>
-        <p>Serving clients nationwide | Licensed agent follow-up</p>
+        <p>Serving Clients Nationwide | Licensed Agent Follow-Up</p>
       </footer>
 
       <ChatBot lead={lead} bookedTime={bookedTime} />

@@ -58,7 +58,7 @@ export default function SeoArticlePage({ page }) {
       <section className="seo-faq">
         <div className="section-heading">
           <p className="eyebrow">Common Questions</p>
-          <h2>Questions people ask before talking with an agent.</h2>
+          <h2>Questions People Ask Before Speaking With a Licensed Agent.</h2>
         </div>
         <div className="faq-list">
           {page.faqs.map((faq) => (
