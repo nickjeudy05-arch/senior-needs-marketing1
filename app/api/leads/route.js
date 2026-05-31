@@ -42,6 +42,8 @@ export async function POST(request) {
     event: "lead_submitted",
     lead_id: leadId,
     name: lead.name,
+    first_name: lead.firstName || lead.name?.trim().split(/\s+/)[0] || "",
+    last_name: lead.lastName || "",
     email: lead.email,
     phone: lead.phone,
     state: lead.state,

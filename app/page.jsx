@@ -216,6 +216,14 @@ const initialLead = {
   contactPreference: "Text me",
 };
 
+function splitName(fullName) {
+  const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] || "",
+    lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
+  };
+}
+
 const consentLanguage =
   "By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my insurance request. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and HELP for help. Consent is not required to buy.";
 
@@ -251,11 +259,14 @@ function LeadForm({ onSubmitted }) {
       return;
     }
     setStatus("sending");
+    const { firstName, lastName } = splitName(lead.name);
     const response = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...lead,
+        firstName,
+        lastName,
         consentAccepted: true,
         consentLanguage,
         consentTimestamp: new Date().toISOString(),
@@ -288,7 +299,7 @@ function LeadForm({ onSubmitted }) {
         <Field label="Email" name="email" type="email" value={lead.email} onChange={updateLead} placeholder="you@example.com" />
         <Field label="Phone" name="phone" type="tel" value={lead.phone} onChange={updateLead} placeholder="Best phone number" />
         <Field label="State" name="state" value={lead.state} onChange={updateLead} placeholder="Florida, Texas, PA..." />
-        <Field label="Date of Birth" name="dob" value={lead.dob} onChange={updateLead} placeholder="MM/DD/YYYY" />
+        <Field label="Date of Birth" name="dob" type="date" value={lead.dob} onChange={updateLead} placeholder="MM/DD/YYYY" />
         <Field label="Beneficiary" name="beneficiary" value={lead.beneficiary} onChange={updateLead} placeholder="Spouse, child, estate..." />
         <Field label="Hobbies" name="hobbies" value={lead.hobbies} onChange={updateLead} placeholder="Travel, gardening, golf..." required={false} />
       </div>

@@ -49,6 +49,8 @@ export async function POST(request) {
     meeting_id: meetingId,
     lead_id: meeting.lead_id || null,
     name: meeting.name || "",
+    first_name: meeting.name?.trim().split(/\s+/)[0] || "",
+    last_name: meeting.name?.trim().split(/\s+/).slice(1).join(" ") || "",
     email: meeting.email || "",
     phone: meeting.phone || "",
     coverage: meeting.coverage || "",

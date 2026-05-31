@@ -237,6 +237,8 @@ def build_assistant_prompt(context: dict[str, Any]) -> str:
 class LeadCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     email: EmailStr
+    firstName: str | None = Field(default="", max_length=80)
+    lastName: str | None = Field(default="", max_length=80)
     phone: str = Field(min_length=7, max_length=30)
     state: str = Field(min_length=2, max_length=80)
     dob: str = Field(min_length=1, max_length=30)
@@ -325,6 +327,8 @@ async def create_lead(lead: LeadCreate) -> dict[str, Any]:
             "event": "lead_submitted",
             "lead_id": lead_id,
             "name": lead.name,
+            "first_name": lead.firstName or lead.name.split()[0],
+            "last_name": lead.lastName or "",
             "email": str(lead.email),
             "phone": lead.phone,
             "state": lead.state,
@@ -404,6 +408,8 @@ async def create_meeting(meeting: MeetingCreate) -> dict[str, Any]:
             "meeting_id": meeting_id,
             "lead_id": meeting.lead_id,
             "name": meeting.name or "",
+            "first_name": (meeting.name or "").split()[0] if meeting.name else "",
+            "last_name": " ".join((meeting.name or "").split()[1:]) if meeting.name else "",
             "email": str(meeting.email) if meeting.email else "",
             "phone": meeting.phone or "",
             "coverage": meeting.coverage or "",
