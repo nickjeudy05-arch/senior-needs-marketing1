@@ -337,6 +337,17 @@ button {
   font-weight: 800;
 }
 
+.form-success {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  color: var(--blue-dark);
+  background: #edf7ff;
+  border: 1px solid rgba(42, 169, 223, 0.32);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 850;
+}
+
 .primary-submit,
 .confirm,
 .call-link {

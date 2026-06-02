@@ -313,9 +313,10 @@ function StateField({ value, onChange }) {
   );
 }
 
-function LeadForm({ onSubmitted }) {
+function LeadForm({ onSubmitted, onVoiceCall }) {
   const [lead, setLead] = useState(initialLead);
   const [status, setStatus] = useState("idle");
+  const [voiceStatus, setVoiceStatus] = useState("");
 
   function updateLead(event) {
     const { name, value } = event.target;
@@ -350,6 +351,15 @@ function LeadForm({ onSubmitted }) {
     }
     const submittedLead = { ...lead, id: outreach.lead_id };
     setStatus("sent");
+
+    if (lead.contactPreference === "Call me") {
+      setVoiceStatus("starting");
+      const voiceResult = await onVoiceCall(submittedLead, "not selected yet");
+      setVoiceStatus(voiceResult || "");
+    } else {
+      setVoiceStatus("");
+    }
+
     onSubmitted(submittedLead, outreach);
   }
 
@@ -424,6 +434,18 @@ function LeadForm({ onSubmitted }) {
       {status === "failed" && (
         <p className="form-alert">We could not save your request yet. Please try again in a moment.</p>
       )}
+      {voiceStatus === "starting" && (
+        <p className="form-success">Starting your AI voice assistant call...</p>
+      )}
+      {voiceStatus === "started" && (
+        <p className="form-success">Your AI voice assistant call has been started.</p>
+      )}
+      {voiceStatus === "failed" && (
+        <p className="form-alert">Your request was saved, but the AI voice call could not start yet.</p>
+      )}
+      {voiceStatus === "already_started" && (
+        <p className="form-success">Your AI voice assistant call has already been started.</p>
+      )}
 
       <button className="primary-submit" disabled={status === "sending"} type="button" onClick={submitLead}>
         {status === "sending" ? "Preparing..." : "Get My Review"}
@@ -433,12 +455,13 @@ function LeadForm({ onSubmitted }) {
   );
 }
 
-function BookingPanel({ lead, onBooked }) {
+function BookingPanel({ lead, onBooked, onVoiceCall }) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("09:00");
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState("");
   const [bookingStatus, setBookingStatus] = useState("idle");
+  const [voiceStatus, setVoiceStatus] = useState("");
 
   const timeSlots = useMemo(() => {
     const slots = [];
@@ -506,7 +529,6 @@ function BookingPanel({ lead, onBooked }) {
   const [meetingType, setMeetingType] = useState("Phone Review");
   const [duration, setDuration] = useState("30 minutes");
   const [timezone, setTimezone] = useState("Local time");
-  const [voiceStatus, setVoiceStatus] = useState("");
 
   async function confirmAppointment() {
     if (!date || !time) {
@@ -557,21 +579,8 @@ function BookingPanel({ lead, onBooked }) {
 
     if (lead.contactPreference === "Call me") {
       setVoiceStatus("starting");
-      const voiceResponse = await fetch("/api/voice-call", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: lead.name,
-          phone: lead.phone,
-          coverage: lead.coverage,
-          state: lead.state,
-          contactPreference: lead.contactPreference,
-          appointment_date: date,
-          appointment_time: time,
-          appointment_label: appointment,
-        }),
-      });
-      setVoiceStatus(voiceResponse.ok ? "started" : "failed");
+      const voiceResult = await onVoiceCall(lead, appointment);
+      setVoiceStatus(voiceResult || "");
     } else {
       setVoiceStatus("");
     }
@@ -702,9 +711,10 @@ function BookingPanel({ lead, onBooked }) {
                 confirm details, review options for {lead.state || "your state"},
                 and answer questions before any application is started.
               </span>
-              {voiceStatus === "starting" && <em>Starting your AI voice confirmation call...</em>}
-              {voiceStatus === "started" && <em>Your AI voice confirmation call has been started.</em>}
-              {voiceStatus === "failed" && <em>Your appointment is booked, but the AI voice call is not configured yet.</em>}
+              {voiceStatus === "starting" && <em>Starting your AI voice assistant call...</em>}
+              {voiceStatus === "started" && <em>Your AI voice assistant call has been started.</em>}
+              {voiceStatus === "already_started" && <em>Your AI voice assistant call was already started after the form submission.</em>}
+              {voiceStatus === "failed" && <em>Your appointment is booked, but the AI voice call could not start yet.</em>}
             </div>
           </div>
         )}
@@ -961,6 +971,7 @@ export default function HomePage() {
   const [lead, setLead] = useState(null);
   const [bookedTime, setBookedTime] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [voiceCallStartedFor, setVoiceCallStartedFor] = useState("");
 
   function handleLeadSubmitted(nextLead) {
     setLead(nextLead);
@@ -968,6 +979,34 @@ export default function HomePage() {
 
   function handleBooked(nextBookedTime) {
     setBookedTime(nextBookedTime);
+  }
+
+  async function startVoiceCall(callLead, appointmentLabel = "not selected yet") {
+    if (callLead.contactPreference !== "Call me") return "";
+
+    const callKey = callLead.id || callLead.phone;
+    if (voiceCallStartedFor === callKey) return "already_started";
+    setVoiceCallStartedFor(callKey);
+
+    const response = await fetch("/api/voice-call", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: callLead.name,
+        phone: callLead.phone,
+        coverage: callLead.coverage,
+        state: callLead.state,
+        contactPreference: callLead.contactPreference,
+        appointment_label: appointmentLabel,
+      }),
+    });
+
+    if (!response.ok) {
+      setVoiceCallStartedFor("");
+      return "failed";
+    }
+
+    return "started";
   }
 
   return (
@@ -1024,10 +1063,10 @@ export default function HomePage() {
             Any State. Licensed Agent Follow-Up.
           </div>
         </div>
-        <LeadForm onSubmitted={handleLeadSubmitted} />
+        <LeadForm onSubmitted={handleLeadSubmitted} onVoiceCall={startVoiceCall} />
       </section>
 
-      {lead && <BookingPanel lead={lead} onBooked={handleBooked} />}
+      {lead && <BookingPanel lead={lead} onBooked={handleBooked} onVoiceCall={startVoiceCall} />}
 
       {bookedTime && (
         <section className="booked-banner" aria-live="polite">
