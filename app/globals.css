@@ -612,9 +612,19 @@ button {
 }
 
 .appointment-confirmation span {
+  display: block;
   color: #176b58;
   font-size: 13px;
   line-height: 1.4;
+}
+
+.appointment-confirmation em {
+  display: block;
+  margin-top: 10px;
+  color: var(--blue-dark);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .confirmation-icon {

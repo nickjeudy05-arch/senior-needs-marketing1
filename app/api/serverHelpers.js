@@ -82,3 +82,11 @@ export function appointmentStartIso(appointmentDate, appointmentTime, timezone) 
   const offset = parts.find((part) => part.type === "timeZoneName")?.value.replace("GMT", "") || "-05:00";
   return `${appointmentDate}T${appointmentTime}:00${offset}`;
 }
+
+export function normalizePhoneNumber(phone) {
+  const digits = `${phone || ""}`.replace(/\D/g, "");
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  if (`${phone || ""}`.trim().startsWith("+")) return `${phone}`.trim();
+  return "";
+}

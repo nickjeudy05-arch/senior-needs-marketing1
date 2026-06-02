@@ -52,18 +52,18 @@ export default function TermsPage() {
         <article>
           <h2>Appointments and Communications</h2>
           <p>
-            When you submit a form or request an appointment, you agree that Senior Needs Marketing or a licensed agent
-            may contact you about your request using the information you provide. Appointment requests are not guaranteed
-            until confirmed by a representative.
+            When you submit a form or request an appointment, you agree that Senior Needs Marketing, a licensed agent,
+            or an automated or AI-assisted communication tool may contact you about your request using the information
+            you provide. Appointment requests are not guaranteed until confirmed by a representative.
           </p>
         </article>
 
         <article>
-          <h2>AI Assistant and SMS Replies</h2>
+          <h2>AI Assistant, Voice Calls, and SMS Replies</h2>
           <p>
-            Chat and SMS assistant responses are automated educational support tools. They may help explain insurance
-            concepts and prepare questions for an agent, but they are not final recommendations and should not be relied
-            on as a substitute for a licensed agent review.
+            Chat, voice, and SMS assistant responses are automated educational support tools. They may help explain
+            insurance concepts and prepare questions for an agent, but they are not final recommendations and should not
+            be relied on as a substitute for a licensed agent review.
           </p>
         </article>
 

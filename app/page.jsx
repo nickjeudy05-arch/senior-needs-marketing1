@@ -280,7 +280,7 @@ function splitName(fullName) {
 }
 
 const consentLanguage =
-  "By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my insurance request. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and HELP for help. Consent is not required to buy.";
+  "By submitting this form, I agree Senior Needs Marketing may contact me by phone, text, or email about my insurance request, including automated or AI-assisted calls and messages. Message frequency may vary. Message and data rates may apply. Reply STOP to opt out and HELP for help. Consent is not required to buy.";
 
 function Field({ label, name, type = "text", value, onChange, placeholder, required = true }) {
   return (
@@ -506,6 +506,7 @@ function BookingPanel({ lead, onBooked }) {
   const [meetingType, setMeetingType] = useState("Phone Review");
   const [duration, setDuration] = useState("30 minutes");
   const [timezone, setTimezone] = useState("Local time");
+  const [voiceStatus, setVoiceStatus] = useState("");
 
   async function confirmAppointment() {
     if (!date || !time) {
@@ -553,6 +554,28 @@ function BookingPanel({ lead, onBooked }) {
     setBookingStatus("saved");
     setConfirmed(appointment);
     onBooked(appointment);
+
+    if (lead.contactPreference === "Call me") {
+      setVoiceStatus("starting");
+      const voiceResponse = await fetch("/api/voice-call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: lead.name,
+          phone: lead.phone,
+          coverage: lead.coverage,
+          state: lead.state,
+          contactPreference: lead.contactPreference,
+          appointment_date: date,
+          appointment_time: time,
+          appointment_label: appointment,
+        }),
+      });
+      setVoiceStatus(voiceResponse.ok ? "started" : "failed");
+    } else {
+      setVoiceStatus("");
+    }
+
     setTimeout(() => {
       document.querySelector(".appointment-confirmation")?.scrollIntoView({
         behavior: "smooth",
@@ -679,6 +702,9 @@ function BookingPanel({ lead, onBooked }) {
                 confirm details, review options for {lead.state || "your state"},
                 and answer questions before any application is started.
               </span>
+              {voiceStatus === "starting" && <em>Starting your AI voice confirmation call...</em>}
+              {voiceStatus === "started" && <em>Your AI voice confirmation call has been started.</em>}
+              {voiceStatus === "failed" && <em>Your appointment is booked, but the AI voice call is not configured yet.</em>}
             </div>
           </div>
         )}
