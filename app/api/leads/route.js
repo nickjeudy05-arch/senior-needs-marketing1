@@ -1,4 +1,4 @@
-import { forwardToBackend, insertSupabase, sendHighLevel } from "../serverHelpers";
+import { forwardToBackend, insertSupabase, sendHighLevel, startVapiCall } from "../serverHelpers";
 
 export async function POST(request) {
   const lead = await request.json();
@@ -62,8 +62,19 @@ export async function POST(request) {
   try {
     const supabaseStatus = await insertSupabase("leads", row);
     const highlevel_status = await sendHighLevel(process.env.HIGHLEVEL_LEAD_WEBHOOK_URL, highLevelPayload);
+    const voice_call_status =
+      lead.contactPreference === "Call me"
+        ? await startVapiCall({
+            name: lead.name,
+            phone: lead.phone,
+            coverage: lead.coverage,
+            state: lead.state,
+            contactPreference: lead.contactPreference,
+            appointment_label: "not selected yet",
+          })
+        : { ok: false, status: "not_requested" };
 
-    if (supabaseStatus === "not_configured" && highlevel_status === "not_configured") {
+    if (supabaseStatus === "not_configured" && highlevel_status === "not_configured" && !voice_call_status.ok) {
       return Response.json(
         { ok: false, message: "Lead storage is not configured for this deployment." },
         { status: 503 },
@@ -75,6 +86,7 @@ export async function POST(request) {
       lead_id: leadId,
       outreachStatus: "queued",
       highlevel_status,
+      voice_call_status,
       message: "Lead received. A licensed agent can follow up by the preferred contact method.",
     });
   } catch (error) {

@@ -354,10 +354,9 @@ function LeadForm({ onSubmitted, onVoiceCall }) {
     setStatus("sent");
 
     if (lead.contactPreference === "Call me") {
-      setVoiceStatus("starting");
-      const voiceResult = await onVoiceCall(submittedLead, "not selected yet");
-      setVoiceStatus(voiceResult.status || "");
-      setVoiceMessage(voiceResult.message || "");
+      const voiceResult = outreach.voice_call_status;
+      setVoiceStatus(voiceResult?.ok ? "started" : "failed");
+      setVoiceMessage(voiceResult?.message || "");
     } else {
       setVoiceStatus("");
       setVoiceMessage("");
