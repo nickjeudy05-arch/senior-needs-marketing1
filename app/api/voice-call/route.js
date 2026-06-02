@@ -46,7 +46,7 @@ export async function POST(request) {
       {
         ok: false,
         status: "test_number_not_allowed",
-        message: "This number is not in the Vapi test allowlist.",
+        message: "This number is not in the Vapi test allowlist. For local testing, use 610-585-9162 or add the number to VAPI_TEST_PHONE_ALLOWLIST.",
       },
       { status: 403 },
     );

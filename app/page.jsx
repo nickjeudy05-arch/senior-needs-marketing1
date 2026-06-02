@@ -317,6 +317,7 @@ function LeadForm({ onSubmitted, onVoiceCall }) {
   const [lead, setLead] = useState(initialLead);
   const [status, setStatus] = useState("idle");
   const [voiceStatus, setVoiceStatus] = useState("");
+  const [voiceMessage, setVoiceMessage] = useState("");
 
   function updateLead(event) {
     const { name, value } = event.target;
@@ -355,9 +356,11 @@ function LeadForm({ onSubmitted, onVoiceCall }) {
     if (lead.contactPreference === "Call me") {
       setVoiceStatus("starting");
       const voiceResult = await onVoiceCall(submittedLead, "not selected yet");
-      setVoiceStatus(voiceResult || "");
+      setVoiceStatus(voiceResult.status || "");
+      setVoiceMessage(voiceResult.message || "");
     } else {
       setVoiceStatus("");
+      setVoiceMessage("");
     }
 
     onSubmitted(submittedLead, outreach);
@@ -441,7 +444,7 @@ function LeadForm({ onSubmitted, onVoiceCall }) {
         <p className="form-success">Your AI voice assistant call has been started.</p>
       )}
       {voiceStatus === "failed" && (
-        <p className="form-alert">Your request was saved, but the AI voice call could not start yet.</p>
+        <p className="form-alert">{voiceMessage || "Your request was saved, but the AI voice call could not start yet."}</p>
       )}
       {voiceStatus === "already_started" && (
         <p className="form-success">Your AI voice assistant call has already been started.</p>
@@ -462,6 +465,7 @@ function BookingPanel({ lead, onBooked, onVoiceCall }) {
   const [confirmed, setConfirmed] = useState("");
   const [bookingStatus, setBookingStatus] = useState("idle");
   const [voiceStatus, setVoiceStatus] = useState("");
+  const [voiceMessage, setVoiceMessage] = useState("");
 
   const timeSlots = useMemo(() => {
     const slots = [];
@@ -580,9 +584,11 @@ function BookingPanel({ lead, onBooked, onVoiceCall }) {
     if (lead.contactPreference === "Call me") {
       setVoiceStatus("starting");
       const voiceResult = await onVoiceCall(lead, appointment);
-      setVoiceStatus(voiceResult || "");
+      setVoiceStatus(voiceResult.status || "");
+      setVoiceMessage(voiceResult.message || "");
     } else {
       setVoiceStatus("");
+      setVoiceMessage("");
     }
 
     setTimeout(() => {
@@ -714,7 +720,7 @@ function BookingPanel({ lead, onBooked, onVoiceCall }) {
               {voiceStatus === "starting" && <em>Starting your AI voice assistant call...</em>}
               {voiceStatus === "started" && <em>Your AI voice assistant call has been started.</em>}
               {voiceStatus === "already_started" && <em>Your AI voice assistant call was already started after the form submission.</em>}
-              {voiceStatus === "failed" && <em>Your appointment is booked, but the AI voice call could not start yet.</em>}
+              {voiceStatus === "failed" && <em>{voiceMessage || "Your appointment is booked, but the AI voice call could not start yet."}</em>}
             </div>
           </div>
         )}
@@ -982,10 +988,10 @@ export default function HomePage() {
   }
 
   async function startVoiceCall(callLead, appointmentLabel = "not selected yet") {
-    if (callLead.contactPreference !== "Call me") return "";
+    if (callLead.contactPreference !== "Call me") return { status: "" };
 
     const callKey = callLead.id || callLead.phone;
-    if (voiceCallStartedFor === callKey) return "already_started";
+    if (voiceCallStartedFor === callKey) return { status: "already_started" };
     setVoiceCallStartedFor(callKey);
 
     const response = await fetch("/api/voice-call", {
@@ -1002,11 +1008,15 @@ export default function HomePage() {
     });
 
     if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
       setVoiceCallStartedFor("");
-      return "failed";
+      return {
+        status: "failed",
+        message: error.message || "The AI voice call could not start yet.",
+      };
     }
 
-    return "started";
+    return { status: "started" };
   }
 
   return (
