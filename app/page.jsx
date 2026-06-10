@@ -1001,6 +1001,8 @@ export default function HomePage() {
         phone: callLead.phone,
         coverage: callLead.coverage,
         state: callLead.state,
+        beneficiary: callLead.beneficiary,
+        hobbies: callLead.hobbies,
         contactPreference: callLead.contactPreference,
         appointment_label: appointmentLabel,
       }),

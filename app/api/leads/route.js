@@ -69,6 +69,8 @@ export async function POST(request) {
             phone: lead.phone,
             coverage: lead.coverage,
             state: lead.state,
+            beneficiary: lead.beneficiary,
+            hobbies: lead.hobbies || "",
             contactPreference: lead.contactPreference,
             appointment_label: "not selected yet",
           })

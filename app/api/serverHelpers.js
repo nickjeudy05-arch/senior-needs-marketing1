@@ -153,6 +153,8 @@ export async function startVapiCall(payload) {
           first_name: payload.name?.trim().split(/\s+/)[0] || "there",
           coverage: payload.coverage || "insurance",
           state: payload.state || "your state",
+          beneficiary: payload.beneficiary || "the person you listed",
+          hobby: payload.hobbies || payload.hobby || "the hobby you listed",
           appointment_time: payload.appointment_label || "not selected yet",
           contact_preference: payload.contactPreference || "Call me",
         },
@@ -166,7 +168,7 @@ export async function startVapiCall(payload) {
     return {
       ok: false,
       status: "vapi_failed",
-      message: "Vapi could not start the call.",
+      message: data.message || "Vapi could not start the call.",
       vapi_status: response.status,
       vapi_error: data,
     };
